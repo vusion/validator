@@ -1,0 +1,38 @@
+{
+  "name": "atom-validator",
+  "description": "Atom Validator",
+  "version": "0.1.0",
+  "author": "zhangsanshi",
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "npm run compile && mocha out/test/**/*.test.js",
+    "lint": "eslint ./src --fix",
+    "precommit": "node node_modules/vusion-hooks/precommit"
+  },
+  "main": "./out/index.js",
+  "repository": "vusion/atom-validator",
+  "bugs": {
+    "url": "http://github.com/vusion/atom-validator/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "atom",
+    "validator"
+  ],
+  "tags": [
+    "atom",
+    "validator"
+  ],
+  "dependencies": {
+  },
+  "devDependencies": {
+    "eslint": "^5.12.0",
+    "eslint-config-vusion": "^3.0.1",
+    "husky": "^0.14.3",
+    "mocha": "^5.2.0",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.3.1",
+    "vusion-hooks": "^0.2.1"
+  }
+}
