@@ -5,6 +5,7 @@ export type ValidateFunc = (value: any, rule: Rule, options?: Object) => Validat
 
 export interface Rule {
     validate: string | ValidateFunc,
+    args?: any | Array<any> | (() => any | Array<any> | Promise<any | Array<any>>),
     trigger?: string,
     message?: string,
     ignore?: boolean,

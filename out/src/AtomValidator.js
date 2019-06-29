@@ -20,7 +20,7 @@ const parseRules_1 = require("./parseRules");
  *     });
  */
 class AtomValidator {
-    constructor(validators, rules, validatingRules) {
+    constructor(validators, rules, validatingRules = [], context) {
         this.validators = Object.create(validators || validators_1.default);
         this.rules = Object.create(rules || rules_1.default);
         let normalizedRules = [];
@@ -35,6 +35,7 @@ class AtomValidator {
             });
         }
         this.validatingRules = normalizedRules;
+        this.context = context;
         console.log(normalizedRules);
     }
     validate(value, trigger = '', options) {
@@ -49,12 +50,19 @@ class AtomValidator {
                     if (!validator)
                         throw new Error('[atom-validator] Cannot find validator: ' + rule.validate);
                     validate = (value, rule, options) => __awaiter(this, void 0, void 0, function* () {
-                        let args = Array.isArray(rule.args) ? rule.args : [rule.args];
+                        let args = rule.args;
+                        if (typeof args === 'function')
+                            args = args();
+                        if (args instanceof Promise)
+                            args = yield args;
+                        if (!Array.isArray(args))
+                            args = [args];
                         let valid = validator(value, ...args);
                         if (valid instanceof Promise)
                             valid = yield valid;
+                        options = Object.assign({}, options, args);
                         if (!valid)
-                            return Promise.reject(rule.message);
+                            return Promise.reject(this.formatMessage(rule.message || '', options));
                         else
                             return Promise.resolve();
                     });
@@ -65,32 +73,56 @@ class AtomValidator {
                 if (result instanceof Promise)
                     result = yield result;
                 if (typeof result === 'string')
-                    return Promise.reject(result);
+                    return Promise.reject(this.formatMessage(result, options));
                 else if (typeof result === 'boolean') {
                     if (result === false)
-                        return Promise.reject(rule.message);
+                        return Promise.reject(this.formatMessage(rule.message || '', options));
                 }
             }
             return Promise.resolve();
         });
     }
-    parseRules(exp) {
-        const parsedRules = parseRules_1.default(exp);
+    /** @TODO: i18n */
+    formatMessage(message, options) {
+        if (!options)
+            return message;
+        else
+            return message.replace(/\{([a-zA-Z0-9_]+)\}/g, (m, $1) => options[$1]);
+    }
+    parseRules(rules) {
+        const parsedRules = parseRules_1.default(rules);
         const triggerCases = {
             'i': 'input',
             'b': 'blur',
             'ib': 'input+blur',
             'bi': 'blur+input',
         };
+        const resolveArgs = (args) => Function(`with (this) { return ${args} }`).bind(this.context);
+        const finalRules = [];
         parsedRules.forEach((rule) => {
-            if (rule.validate) {
+            const validate = rule.validate;
+            if (!validate)
+                return;
+            const index = validate.indexOf('(');
+            if (~index) {
+                rule.validate = validate.slice(0, index);
+                const args = '[' + validate.slice(index + 1, validate.length - 1) + ']';
+                rule.args = resolveArgs(args);
             }
             if (rule.trigger) {
                 if (triggerCases[rule.trigger])
                     rule.trigger = triggerCases[rule.trigger];
             }
+            const builtInRule = this.rules[rule.validate];
+            if (builtInRule) {
+                if (builtInRule.validate)
+                    rule.validate = builtInRule.validate;
+                finalRules.push(Object.assign({}, builtInRule, rule));
+            }
+            else
+                finalRules.push(rule);
         });
-        return parsedRules;
+        return finalRules;
     }
 }
 exports.default = AtomValidator;
