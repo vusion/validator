@@ -24,8 +24,7 @@
     "atom",
     "validator"
   ],
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "eslint": "^5.12.0",
     "eslint-config-vusion": "^3.0.1",

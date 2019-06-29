@@ -1,4 +1,4 @@
-# vusion-api
+# atom-validator
 
 - [中文说明](README.zh-CN.md)
 
@@ -9,14 +9,14 @@ A boilerplate for creating npm package repo.
 [![Dependencies][david-img]][david-url]
 [![NPM Download][download-img]][download-url]
 
-[circleci-img]: https://img.shields.io/circleci/project/github/vusion/vusion-api.svg?style=flat-square
-[circleci-url]: https://circleci.com/gh/vusion/vusion-api
-[npm-img]: http://img.shields.io/npm/v/vusion-api.svg?style=flat-square
-[npm-url]: http://npmjs.org/package/vusion-api
-[david-img]: http://img.shields.io/david/vusion/vusion-api.svg?style=flat-square
-[david-url]: https://david-dm.org/vusion/vusion-api
-[download-img]: https://img.shields.io/npm/dm/vusion-api.svg?style=flat-square
-[download-url]: https://npmjs.org/package/vusion-api
+[circleci-img]: https://img.shields.io/circleci/project/github/vusion/atom-validator.svg?style=flat-square
+[circleci-url]: https://circleci.com/gh/vusion/atom-validator
+[npm-img]: http://img.shields.io/npm/v/atom-validator.svg?style=flat-square
+[npm-url]: http://npmjs.org/package/atom-validator
+[david-img]: http://img.shields.io/david/vusion/atom-validator.svg?style=flat-square
+[david-url]: https://david-dm.org/vusion/atom-validator
+[download-img]: https://img.shields.io/npm/dm/atom-validator.svg?style=flat-square
+[download-url]: https://npmjs.org/package/atom-validator
 
 ## Example
 
@@ -33,7 +33,7 @@ Introduce some major features of this project.
 ## Install
 
 ``` shell
-npm install --save-dev vusion-api
+npm install --save-dev atom-validator
 ```
 
 ## Options
@@ -74,7 +74,7 @@ npm run test
 
 ## Changelog
 
-See [Releases](https://github.com/vusion/vusion-api/releases)
+See [Releases](https://github.com/vusion/atom-validator/releases)
 
 ## Contributing
 
