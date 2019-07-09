@@ -24,7 +24,11 @@
     "atom",
     "validator"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "@types/validator": "^10.11.1",
+    "lodash": "^4.17.11",
+    "validator": "^11.0.0"
+  },
   "devDependencies": {
     "eslint": "^5.12.0",
     "eslint-config-vusion": "^3.0.1",

@@ -24,7 +24,7 @@ export default class AtomValidator {
         let normalizedRules: Array<Rule> = [];
         if (typeof validatingRules === 'string')
             normalizedRules = this.parseRules(validatingRules);
-        else {
+        else if (Array.isArray(validatingRules)) {
             validatingRules.forEach((rule) => {
                 if (typeof rule === 'string')
                     normalizedRules.push(...this.parseRules(rule));
