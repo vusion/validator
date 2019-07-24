@@ -17,9 +17,10 @@ export default class AtomValidator {
     validatingRules: Array<Rule>;
     context: Object;
 
-    constructor(validators: { [prop: string]: Validator }, rules: { [prop: string]: Rule }, validatingRules: Array<Rule> = [], context: Object) {
+    constructor(validators: { [prop: string]: Validator }, rules: { [prop: string]: Rule }, validatingRules: string | Array<Rule> = [], context: Object) {
         this.validators = Object.create(validators || buildInValidators);
         this.rules = Object.create(rules || builtInRules);
+        this.context = context;
 
         let normalizedRules: Array<Rule> = [];
         if (typeof validatingRules === 'string')
@@ -33,9 +34,6 @@ export default class AtomValidator {
             });
         }
         this.validatingRules = normalizedRules;
-
-        this.context = context;
-        console.log(normalizedRules);
     }
 
     async validate(value: any, trigger: string = '', options?: Object): Promise<string | void> {
@@ -45,7 +43,6 @@ export default class AtomValidator {
             const rule = validatingRules[i];
             let validate: ValidateFunc;
 
-            // @TODO: 考虑为空的情况
             if (typeof rule.validate === 'string') {
                 const validator = this.validators[rule.validate];
                 if (!validator)
@@ -58,7 +55,7 @@ export default class AtomValidator {
                     if (args instanceof Promise)
                         args = await args;
                     if (!Array.isArray(args))
-                        args = [args];
+                        args = args !== undefined ? [args] : [];
                     let valid: boolean | Promise<boolean> = validator(value, ...args);
                     if (valid instanceof Promise)
                         valid = await valid;
@@ -72,10 +69,16 @@ export default class AtomValidator {
             } else
                 validate = rule.validate;
 
-            let result: ValidateResult | Promise<ValidateResult> = validate(value, rule, options);
+
+            let result: ValidateResult | Promise<ValidateResult>;
+            // @note: 如果 rule 中没有 required 字段，则自动忽略为空的情况
+            if (!rule.required && !buildInValidators.required(value))
+                result = true;
+            else
+                result = validate(value, rule, options);
+
             if (result instanceof Promise)
                 result = await result;
-
             if (typeof result === 'string')
                 return Promise.reject(this.formatMessage(result, options));
             else if (typeof result === 'boolean') {
@@ -109,6 +112,7 @@ export default class AtomValidator {
 
         const finalRules: Array<Rule> = [];
         parsedRules.forEach((rule) => {
+            // @note: 字符串中解析出来的 name，其实是规则名称，而不是验证器名
             const validate: string = rule.validate as string;
             if (!validate)
                 return;

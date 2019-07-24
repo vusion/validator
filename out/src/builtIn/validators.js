@@ -32,6 +32,10 @@ const validators = {
     macAddress: (value) => _.isMACAddress(stringify(value)),
     md5: (value) => _.isMD5(stringify(value)),
     equals: (value, arg) => value === arg,
+    includes: (value, ...args) => args.every((arg) => value.includes(arg)),
+    excludes: (value, ...args) => !args.some((arg) => value.includes(arg)),
+    included: (value, ...args) => args.includes(value),
+    excluded: (value, ...args) => !args.includes(value),
     '^az': (value) => /^[a-z]/.test(value),
     '^az09': (value) => /^[a-z0-9]/.test(value),
     '^az09-_': (value) => /^[a-z0-9-_]/.test(value),
@@ -40,18 +44,17 @@ const validators = {
     '^azAZ09_': (value) => /^[a-z0-9-_]/.test(value),
     'az09$': (value) => /^[a-z0-9]/.test(value),
     'azAZ09$': (value) => /^[a-zA-Z0-9]/.test(value),
-    '^09$': (value) => /^[0-9]$/.test(value),
-    '^az09-$': (value) => /^[a-z0-9-]$/.test(value),
-    '^az09-.$': (value) => /^[a-z0-9-.]$/.test(value),
-    '^azAZ09$': (value) => /^[a-zA-Z0-9]$/.test(value),
-    '^azAZ09-$': (value) => /^[a-zA-Z0-9-]$/.test(value),
-    '^azAZ09_$': (value) => /^[a-zA-Z0-9_]$/.test(value),
-    '^azAZ09-_$': (value) => /^[a-zA-Z0-9-_]$/.test(value),
-    '^azAZ09-_.$': (value) => /^[a-zA-Z0-9-_.]$/.test(value),
+    '^09$': (value) => /^[0-9]+$/.test(value),
+    '^az09-$': (value) => /^[a-z0-9-]+$/.test(value),
+    '^az09-.$': (value) => /^[a-z0-9-.]+$/.test(value),
+    '^azAZ09$': (value) => /^[a-zA-Z0-9]+$/.test(value),
+    '^azAZ09-$': (value) => /^[a-zA-Z0-9-]+$/.test(value),
+    '^azAZ09_$': (value) => /^[a-zA-Z0-9_]+$/.test(value),
+    '^azAZ09-_$': (value) => /^[a-zA-Z0-9-_]+$/.test(value),
+    '^azAZ09-_.$': (value) => /^[a-zA-Z0-9-_.]+$/.test(value),
     'without--': (value) => !/-{2,}/.test(value),
     'without__': (value) => !/_{2,}/.test(value),
 };
-validators.pattern = validators.regexp;
 exports.default = validators;
 // oneOf: (value: any, )
 // type: (value: any, )

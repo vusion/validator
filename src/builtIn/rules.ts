@@ -2,8 +2,8 @@ import { Validator, Rule } from "../types";
 
 
 export default {
-    required: { trigger: 'blur', message: '{label}不得为空' } as Rule,
-    filled: { trigger: 'blur', message: '{label}不得为空' } as Rule,
+    required: { required: true, trigger: 'blur', message: '{label}不得为空' } as Rule,
+    filled: { required: true, trigger: 'blur', message: '{label}不得为空' } as Rule,
     empty: { trigger: 'blur', message: '{label}必须为空' } as Rule,
     pattern: { trigger: 'blur', message: '{label}格式不正确' } as Rule,
     minLength: { trigger: 'blur', message: '不得少于{0}个字符' } as Rule,
@@ -26,6 +26,13 @@ export default {
     url: { trigger: 'blur', message: '请输入正确的 URL' } as Rule,
     macAddress: { trigger: 'blur', message: '请输入正确的 MAC 地址' } as Rule,
     md5: { trigger: 'blur', message: '请输入正确的 MD5' } as Rule,
+    equals: { trigger: 'blur', message: '必须与{0}相同' } as Rule,
+    confirmed: { validate: 'equals', trigger: 'blur', message: '两次输入的密码不一致' } as Rule,
+    includes: { trigger: 'blur', message: '必须包含{0}' } as Rule,
+    excludes: { trigger: 'blur', message: '不能包含{0}' } as Rule,
+    included: { trigger: 'blur', message: '必须包含在{0}中' } as Rule,
+    excluded: { trigger: 'blur', message: '不能包含在{0}中' } as Rule,
+    unique: { validate: 'excluded', trigger: 'blur', message: '该{label}已经存在' } as Rule,
     '^az': { trigger: 'input+blur', message: '以小写字母开头' } as Rule,
     '^az09': { trigger: 'input+blur', message: '以小写字母或数字开头' } as Rule,
     'az09$': { trigger: 'blur', message: '以小写字母或数字结尾' } as Rule,

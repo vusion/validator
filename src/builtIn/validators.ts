@@ -33,6 +33,10 @@ const validators = {
     macAddress: (value: any): boolean => _.isMACAddress(stringify(value)),
     md5: (value: any): boolean => _.isMD5(stringify(value)),
     equals: (value: any, arg: any): boolean => value === arg,
+    includes: (value: any, ...args: any[]): boolean => args.every((arg) => value.includes(arg)),
+    excludes: (value: any, ...args: any[]): boolean => !args.some((arg) => value.includes(arg)),
+    included: (value: any, ...args: any[]): boolean => args.includes(value),
+    excluded: (value: any, ...args: any[]): boolean => !args.includes(value),
     '^az': (value: any): boolean => /^[a-z]/.test(value),
     '^az09': (value: any): boolean => /^[a-z0-9]/.test(value),
     '^az09-_': (value: any): boolean => /^[a-z0-9-_]/.test(value),
@@ -41,19 +45,17 @@ const validators = {
     '^azAZ09_': (value: any): boolean => /^[a-z0-9-_]/.test(value),
     'az09$': (value: any): boolean => /^[a-z0-9]/.test(value),
     'azAZ09$': (value: any): boolean => /^[a-zA-Z0-9]/.test(value),
-    '^09$': (value: any): boolean => /^[0-9]$/.test(value),
-    '^az09-$': (value: any): boolean => /^[a-z0-9-]$/.test(value),
-    '^az09-.$': (value: any): boolean => /^[a-z0-9-.]$/.test(value),
-    '^azAZ09$': (value: any): boolean => /^[a-zA-Z0-9]$/.test(value),
-    '^azAZ09-$': (value: any): boolean => /^[a-zA-Z0-9-]$/.test(value),
-    '^azAZ09_$': (value: any): boolean => /^[a-zA-Z0-9_]$/.test(value),
-    '^azAZ09-_$': (value: any): boolean => /^[a-zA-Z0-9-_]$/.test(value),
-    '^azAZ09-_.$': (value: any): boolean => /^[a-zA-Z0-9-_.]$/.test(value),
+    '^09$': (value: any): boolean => /^[0-9]+$/.test(value),
+    '^az09-$': (value: any): boolean => /^[a-z0-9-]+$/.test(value),
+    '^az09-.$': (value: any): boolean => /^[a-z0-9-.]+$/.test(value),
+    '^azAZ09$': (value: any): boolean => /^[a-zA-Z0-9]+$/.test(value),
+    '^azAZ09-$': (value: any): boolean => /^[a-zA-Z0-9-]+$/.test(value),
+    '^azAZ09_$': (value: any): boolean => /^[a-zA-Z0-9_]+$/.test(value),
+    '^azAZ09-_$': (value: any): boolean => /^[a-zA-Z0-9-_]+$/.test(value),
+    '^azAZ09-_.$': (value: any): boolean => /^[a-zA-Z0-9-_.]+$/.test(value),
     'without--': (value: any): boolean => !/-{2,}/.test(value),
     'without__': (value: any): boolean => !/_{2,}/.test(value),
 } as { [prop: string]: Validator };
-
-validators.pattern = validators.regexp;
 
 export default validators;
 
