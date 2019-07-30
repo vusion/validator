@@ -45,10 +45,10 @@ export default function parseRules(exp: string): Array<Rule> {
             partial = exp.slice(lastIndex, i).trim();
             lastIndex = i + 1;
             if (!lastRule)
-                lastRule = { validate: '' };
+                lastRule = { validate: '', rule: '' };
 
             if (partialType === undefined) // func
-                lastRule.validate = partial;
+                lastRule.rule = partial;
             else if (partialType === 0x40) // @ib
                 lastRule.trigger = partial;
             else // #message
@@ -64,10 +64,10 @@ export default function parseRules(exp: string): Array<Rule> {
             partial = exp.slice(lastIndex, i).trim();
             lastIndex = i + 1;
             if (!lastRule && partial)
-                lastRule = { validate: '' };
+                lastRule = { validate: '', rule: '' };
             if (lastRule) {
                 if (partialType === undefined) // func
-                    lastRule.validate = partial;
+                    lastRule.rule = partial;
                 else if (partialType === 0x40) // @ib
                     lastRule.trigger = partial;
                 else // #message
@@ -107,10 +107,10 @@ export default function parseRules(exp: string): Array<Rule> {
     partial = exp.slice(lastIndex, i).trim();
     lastIndex = i + 1;
     if (!lastRule && partial)
-        lastRule = { validate: '' };
+        lastRule = { validate: '', rule: '' };
     if (lastRule) {
         if (partialType === undefined) // func
-            lastRule.validate = partial;
+            lastRule.rule = partial;
         else if (partialType === 0x40) // @ib
             lastRule.trigger = partial;
         else // #message

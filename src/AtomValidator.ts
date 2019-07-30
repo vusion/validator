@@ -10,30 +10,32 @@ import parseRules from './parseRules';
  *     .then(() => {
  *     }).catch((error: string) => {
  *     });
+ *
+ * @TODO: 相同环境下的 rules 应该是一样的，如何不用在每个组件中重复解析
  */
 export default class AtomValidator {
     validators: { [prop: string]: Validator };
-    rules: { [prop: string]: Rule };
+    rules: { [prop: string]: Rule | Array<Rule> };
     validatingRules: Array<Rule>;
     context: Object;
 
-    constructor(validators: { [prop: string]: Validator }, rules: { [prop: string]: Rule }, validatingRules: string | Array<Rule> = [], context: Object) {
-        this.validators = Object.create(validators || buildInValidators);
-        this.rules = Object.create(rules || builtInRules);
+    constructor(
+        validators: { [prop: string]: Validator },
+        rules: { [prop: string]: Rule | string | Array<Rule | string> },
+        validatingRules: string | Array<Rule | string> = [],
+        context: Object,
+    ) {
         this.context = context;
+        this.validators = Object.create(validators || buildInValidators);
 
-        let normalizedRules: Array<Rule> = [];
-        if (typeof validatingRules === 'string')
-            normalizedRules = this.parseRules(validatingRules);
-        else if (Array.isArray(validatingRules)) {
-            validatingRules.forEach((rule) => {
-                if (typeof rule === 'string')
-                    normalizedRules.push(...this.parseRules(rule));
-                else
-                    normalizedRules.push(rule);
-            });
-        }
-        this.validatingRules = normalizedRules;
+        this.rules = Object.create(rules || builtInRules);
+        Object.keys(this.rules).forEach((key) => {
+            const rule = this.rules[key];
+            const normalizedRule = this.normalizeRules(rule);
+            if (normalizedRule !== rule)
+                this.rules[key] = normalizedRule;
+        });
+        this.validatingRules = this.normalizeRules(validatingRules) as Array<Rule>;
     }
 
     async validate(value: any, trigger: string = '', options?: Object): Promise<string | void> {
@@ -46,12 +48,12 @@ export default class AtomValidator {
             if (typeof rule.validate === 'string') {
                 const validator = this.validators[rule.validate];
                 if (!validator)
-                    throw new Error('[atom-validator] Cannot find validator: ' + rule.validate);
+                    throw new Error('[atom-validator] Unknown validator: ' + rule.validate);
 
                 validate = async (value: any, rule: Rule, options?: Object) => {
                     let args: any | Array<any> | (() => any | Array<any> | Promise<any | Array<any>>) = rule.args;
                     if (typeof args === 'function')
-                        args = args();
+                        args = args.call(this.context);
                     if (args instanceof Promise)
                         args = await args;
                     if (!Array.isArray(args))
@@ -60,7 +62,7 @@ export default class AtomValidator {
                     if (valid instanceof Promise)
                         valid = await valid;
 
-                    options = Object.assign({}, options, args);
+                    options = Object.assign({ args }, options, args);
                     if (!valid)
                         return Promise.reject(this.formatMessage(rule.message || '', options));
                     else
@@ -75,7 +77,7 @@ export default class AtomValidator {
             if (!rule.required && !buildInValidators.required(value))
                 result = true;
             else
-                result = validate(value, rule, options);
+                result = validate.call(this.context, value, rule, options);
 
             if (result instanceof Promise)
                 result = await result;
@@ -98,10 +100,30 @@ export default class AtomValidator {
             return message.replace(/\{([a-zA-Z0-9_]+)\}/g, (m, $1) => options[$1]);
     }
 
-    parseRules(rules: string): Array<Rule> {
+    normalizeRules(rules: string | Rule | Array<string | Rule>, originalName?: string): Rule | Array<Rule> {
+        if (typeof rules === 'object' && !Array.isArray(rules))
+            return rules;
+        else if (typeof rules === 'string')
+            return this.parseRules(rules, originalName);
+        else if (Array.isArray(rules)) {
+            if (rules.some((rule) => typeof rule === 'string')) {
+                let normalizedRules: Array<Rule> = [];
+                rules.forEach((rule) => {
+                    if (typeof rule === 'string')
+                        normalizedRules.push(...this.parseRules(rule, originalName));
+                    else
+                        normalizedRules.push(rule);
+                });
+                return normalizedRules;
+            } else
+                return rules as Array<Rule>;
+        }
+    }
+
+    parseRules(rules: string, originalName?: string): Array<Rule> {
         const parsedRules = parseRules(rules);
 
-        const triggerCases: { [prop: string]: string } = {
+        const TRIGGER_CASES: { [prop: string]: string } = {
             'i': 'input',
             'b': 'blur',
             'ib': 'input+blur',
@@ -111,31 +133,50 @@ export default class AtomValidator {
         const resolveArgs = (args: string) => Function(`with (this) { return ${args} }`).bind(this.context);
 
         const finalRules: Array<Rule> = [];
-        parsedRules.forEach((rule) => {
-            // @note: 字符串中解析出来的 name，其实是规则名称，而不是验证器名
-            const validate: string = rule.validate as string;
-            if (!validate)
+        parsedRules.forEach((parsedRule) => {
+            const ruleName = parsedRule.rule;
+            if (!parsedRule.rule)
                 return;
 
-            const index = validate.indexOf('(')
+            const index = ruleName.indexOf('(')
             if (~index) {
-                rule.validate = validate.slice(0, index);
-                const args = '[' + validate.slice(index + 1, validate.length - 1) + ']';
-                rule.args = resolveArgs(args);
+                parsedRule.rule = ruleName.slice(0, index);
+                const args = '[' + ruleName.slice(index + 1, ruleName.length - 1) + ']';
+                parsedRule.args = resolveArgs(args);
             }
 
-            if (rule.trigger) {
-                if (triggerCases[rule.trigger])
-                    rule.trigger = triggerCases[rule.trigger];
+            if (parsedRule.trigger) {
+                if (TRIGGER_CASES[parsedRule.trigger])
+                    parsedRule.trigger = TRIGGER_CASES[parsedRule.trigger];
             }
 
-            const builtInRule = this.rules[rule.validate as string];
+            if (originalName === parsedRule.rule)
+                throw new Error('[atom-validator] Circular rule reference: ' + originalName);
+
+            let builtInRule = this.rules[parsedRule.rule];
             if (builtInRule) {
-                if (builtInRule.validate)
-                    rule.validate = builtInRule.validate;
-                finalRules.push(Object.assign({}, builtInRule, rule));
-            } else
-                finalRules.push(rule);
+                if (typeof builtInRule === 'string'
+                    || Array.isArray(builtInRule) && builtInRule.some((rule) => typeof rule === 'string'))
+                    builtInRule = this.normalizeRules(builtInRule, parsedRule.rule);
+
+                if (Array.isArray(builtInRule)) {
+                    if (parsedRule.args || parsedRule.trigger)
+                        console.warn('[atom-validator]', 'Cannot apply args or trigger to composite rules!');
+                    finalRules.push(...builtInRule);
+                } else {
+                    if (builtInRule.validate)
+                        parsedRule.validate = builtInRule.validate;
+                    else
+                        parsedRule.validate = parsedRule.rule;
+                    delete parsedRule.rule;
+                    finalRules.push(Object.assign({}, builtInRule, parsedRule));
+                }
+            } else {
+                throw new Error('[atom-validator] Unknown rule: ' + parsedRule.rule);
+                // parsedRule.validate = parsedRule.rule;
+                // delete parsedRule.rule;
+                // finalRules.push(parsedRule);
+            }
         });
 
         return finalRules;

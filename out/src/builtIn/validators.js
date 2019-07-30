@@ -1,57 +1,87 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const _ = require("validator");
-const stringify = (value) => value === undefined || value === null ? '' : String(value);
+const isPlainObject = require('lodash/isPlainObject');
+const $ = require("validator");
+const isNil = (value) => value === undefined || value === null || value === '';
+const isEmpty = (value) => {
+    if (isNil(value))
+        return true;
+    else if (Array.isArray(value))
+        return !value.length;
+    else if (value instanceof Object)
+        return !Object.keys(value).length;
+    else
+        return false;
+};
+const stringify = (value) => {
+    if (isNil(value))
+        return '';
+    else if (Array.isArray(value))
+        return `[${value}]`;
+    else
+        return String(value);
+};
+// 非必填验证不需要为空判断，验证时会自动通过
 const validators = {
-    required: (value) => !!stringify(value),
+    required: (value) => !isNil(value),
     filled: (value) => !!stringify(value).trim(),
-    // array
-    empty: (value) => !stringify(value),
-    pattern: (value, re) => new RegExp(re).test(value),
-    minLength: (value, min) => stringify(value).length >= min,
-    maxLength: (value, max) => stringify(value).length <= max,
+    notEmpty: (value) => !isEmpty(value),
+    empty: (value) => isEmpty(value),
+    minLength: (value, min) => value.length >= min,
+    maxLength: (value, max) => value.length <= max,
     rangeLength: (value, min, max) => {
-        const length = stringify(value).length;
+        const length = value.length;
         return min <= length && length <= max;
     },
     min: (value, min) => value >= min,
     max: (value, max) => value <= max,
     range: (value, min, max) => min <= value && value <= max,
-    string: (value) => typeof value === 'string',
-    number: (value) => typeof value === 'number',
-    numeric: (value) => _.isNumeric(stringify(value)),
-    alpha: (value) => _.isAlpha(stringify(value)),
-    alphaNumeric: (value) => _.isAlphanumeric(stringify(value)),
-    integer: (value) => _.isInt(stringify(value)),
-    decimal: (value) => _.isDecimal(stringify(value)),
-    email: (value) => _.isEmail(stringify(value)),
-    ip: (value, version) => _.isIP(stringify(value), version),
-    // ipRange: (value: any): boolean => _.isIPRange(stringify(value)),
-    port: (value) => _.isPort(stringify(value)),
-    url: (value) => _.isURL(stringify(value)),
-    macAddress: (value) => _.isMACAddress(stringify(value)),
-    md5: (value) => _.isMD5(stringify(value)),
+    pattern: (value, re) => new RegExp(re).test(value),
     equals: (value, arg) => value === arg,
     includes: (value, ...args) => args.every((arg) => value.includes(arg)),
     excludes: (value, ...args) => !args.some((arg) => value.includes(arg)),
     included: (value, ...args) => args.includes(value),
     excluded: (value, ...args) => !args.includes(value),
+    string: (value) => typeof value === 'string',
+    number: (value) => typeof value === 'number',
+    numeric: (value, noSymbols) => $.isNumeric(stringify(value), {
+        no_symbols: noSymbols,
+    }),
+    integer: (value) => $.isInt(stringify(value)),
+    decimal: (value, force, digits) => $.isDecimal(stringify(value), {
+        force_decimal: force,
+        decimal_digits: digits,
+    }),
+    boolean: (value) => typeof value === 'boolean',
+    function: (value) => typeof value === 'function',
+    object: (value) => typeof value === 'object',
+    plainObject: (value) => isPlainObject(value),
+    array: (value) => Array.isArray(value),
+    alpha: (value) => $.isAlpha(stringify(value)),
+    alphaNumeric: (value) => $.isAlphanumeric(stringify(value)),
+    email: (value) => $.isEmail(stringify(value)),
+    ip: (value, version) => $.isIP(stringify(value), version),
+    // ipRange: (value: any): boolean => $.isIPRange(stringify(value)),
+    port: (value) => $.isPort(stringify(value)),
+    url: (value) => $.isURL(stringify(value)),
+    macAddress: (value) => $.isMACAddress(stringify(value)),
+    md5: (value) => $.isMD5(stringify(value)),
     '^az': (value) => /^[a-z]/.test(value),
     '^az09': (value) => /^[a-z0-9]/.test(value),
-    '^az09-_': (value) => /^[a-z0-9-_]/.test(value),
-    '^az09.': (value) => /^[a-z0-9.]/.test(value),
+    '^az09_': (value) => /^[a-z0-9_]/.test(value),
     '^azAZ': (value) => /^[a-zA-Z]/.test(value),
-    '^azAZ09_': (value) => /^[a-z0-9-_]/.test(value),
+    '^azAZ09': (value) => /^[a-zA-Z0-9]/.test(value),
+    '^azAZ09_': (value) => /^[a-z0-9_]/.test(value),
     'az09$': (value) => /^[a-z0-9]/.test(value),
     'azAZ09$': (value) => /^[a-zA-Z0-9]/.test(value),
     '^09$': (value) => /^[0-9]+$/.test(value),
+    '^az09$': (value) => /^[a-z0-9]+$/.test(value),
     '^az09-$': (value) => /^[a-z0-9-]+$/.test(value),
     '^az09-.$': (value) => /^[a-z0-9-.]+$/.test(value),
     '^azAZ09$': (value) => /^[a-zA-Z0-9]+$/.test(value),
     '^azAZ09-$': (value) => /^[a-zA-Z0-9-]+$/.test(value),
     '^azAZ09_$': (value) => /^[a-zA-Z0-9_]+$/.test(value),
     '^azAZ09-_$': (value) => /^[a-zA-Z0-9-_]+$/.test(value),
-    '^azAZ09-_.$': (value) => /^[a-zA-Z0-9-_.]+$/.test(value),
     'without--': (value) => !/-{2,}/.test(value),
     'without__': (value) => !/_{2,}/.test(value),
 };
