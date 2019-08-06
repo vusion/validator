@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const validators_1 = require("./builtIn/validators");
-const rules_1 = require("./builtIn/rules");
+// import builtInRules from './builtIn/rules';
 const parseRules_1 = require("./parseRules");
 /**
  * @example
@@ -25,7 +25,7 @@ class AtomValidator {
     constructor(validators, rules, validatingRules = [], context) {
         this.context = context;
         this.validators = Object.create(validators || validators_1.default);
-        this.rules = Object.create(rules || rules_1.default);
+        this.rules = Object.create(rules || {});
         Object.keys(this.rules).forEach((key) => {
             const rule = this.rules[key];
             const normalizedRule = this.normalizeRules(rule);
@@ -47,7 +47,7 @@ class AtomValidator {
                     validate = (value, rule, options) => __awaiter(this, void 0, void 0, function* () {
                         let args = rule.args;
                         if (typeof args === 'function')
-                            args = args.call(this.context);
+                            args = args.call(this.context, value, rule, options);
                         if (args instanceof Promise)
                             args = yield args;
                         if (!Array.isArray(args))

@@ -1,6 +1,6 @@
 import { Validator, Rule, ValidateResult, ValidateFunc } from './types';
 import buildInValidators from './builtIn/validators';
-import builtInRules from './builtIn/rules';
+// import builtInRules from './builtIn/rules';
 import parseRules from './parseRules';
 
 /**
@@ -28,7 +28,7 @@ export default class AtomValidator {
         this.context = context;
         this.validators = Object.create(validators || buildInValidators);
 
-        this.rules = Object.create(rules || builtInRules);
+        this.rules = Object.create(rules || {});
         Object.keys(this.rules).forEach((key) => {
             const rule = this.rules[key];
             const normalizedRule = this.normalizeRules(rule);
@@ -53,7 +53,7 @@ export default class AtomValidator {
                 validate = async (value: any, rule: Rule, options?: Object) => {
                     let args: any | Array<any> | (() => any | Array<any> | Promise<any | Array<any>>) = rule.args;
                     if (typeof args === 'function')
-                        args = args.call(this.context);
+                        args = args.call(this.context, value, rule, options);
                     if (args instanceof Promise)
                         args = await args;
                     if (!Array.isArray(args))
