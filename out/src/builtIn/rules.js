@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const en_US = require("../locales/en-US.json");
-const zh_CN = require("../locales/zh-CN.json");
-const messages = {
+var en_US = require("../locales/en-US.json");
+var zh_CN = require("../locales/zh-CN.json");
+var messages = {
     'en-US': en_US,
     'zh-CN': zh_CN,
 };
 function localizeRules(locale) {
-    const localized = messages[locale || 'zh-CN'];
+    var localized = messages[locale || 'zh-CN'];
     return {
         required: { required: true, trigger: 'blur', message: localized['required'] },
         filled: { required: true, trigger: 'blur', message: localized['filled'] },

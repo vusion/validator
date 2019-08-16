@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const isPlainObject = require('lodash/isPlainObject');
-const $ = require("validator");
-const isNil = (value) => value === undefined || value === null || value === '';
-const isEmpty = (value) => {
+var isPlainObject = require('lodash/isPlainObject');
+var $ = require("validator");
+var isNil = function (value) { return value === undefined || value === null || value === ''; };
+var isEmpty = function (value) {
     if (isNil(value))
         return true;
     else if (Array.isArray(value))
@@ -13,77 +13,101 @@ const isEmpty = (value) => {
     else
         return false;
 };
-const stringify = (value) => {
+var stringify = function (value) {
     if (isNil(value))
         return '';
     else if (Array.isArray(value))
-        return `[${value}]`;
+        return "[" + value + "]";
     else
         return String(value);
 };
 // 非必填验证不需要为空判断，验证时会自动通过
-const validators = {
-    required: (value) => !isNil(value),
-    filled: (value) => !!stringify(value).trim(),
-    notEmpty: (value) => !isEmpty(value),
-    empty: (value) => isEmpty(value),
-    minLength: (value, min) => value.length >= min,
-    maxLength: (value, max) => value.length <= max,
-    rangeLength: (value, min, max) => {
-        const length = value.length;
+var validators = {
+    required: function (value) { return !isNil(value); },
+    filled: function (value) { return !!stringify(value).trim(); },
+    notEmpty: function (value) { return !isEmpty(value); },
+    empty: function (value) { return isEmpty(value); },
+    minLength: function (value, min) { return value.length >= min; },
+    maxLength: function (value, max) { return value.length <= max; },
+    rangeLength: function (value, min, max) {
+        var length = value.length;
         return min <= length && length <= max;
     },
-    min: (value, min) => value >= min,
-    max: (value, max) => value <= max,
-    range: (value, min, max) => min <= value && value <= max,
-    pattern: (value, re) => new RegExp(re).test(value),
-    equals: (value, arg) => value === arg,
-    includes: (value, ...args) => args.every((arg) => value.includes(arg)),
-    excludes: (value, ...args) => !args.some((arg) => value.includes(arg)),
-    included: (value, ...args) => args.includes(value),
-    excluded: (value, ...args) => !args.includes(value),
-    string: (value) => typeof value === 'string',
-    number: (value) => typeof value === 'number',
-    numeric: (value, noSymbols) => $.isNumeric(stringify(value), {
+    min: function (value, min) { return value >= min; },
+    max: function (value, max) { return value <= max; },
+    range: function (value, min, max) { return min <= value && value <= max; },
+    pattern: function (value, re) { return new RegExp(re).test(value); },
+    equals: function (value, arg) { return value === arg; },
+    includes: function (value) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        return args.every(function (arg) { return value.includes(arg); });
+    },
+    excludes: function (value) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        return !args.some(function (arg) { return value.includes(arg); });
+    },
+    included: function (value) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        return args.includes(value);
+    },
+    excluded: function (value) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        return !args.includes(value);
+    },
+    string: function (value) { return typeof value === 'string'; },
+    number: function (value) { return typeof value === 'number'; },
+    numeric: function (value, noSymbols) { return $.isNumeric(stringify(value), {
         no_symbols: noSymbols,
-    }),
-    integer: (value) => $.isInt(stringify(value)),
-    decimal: (value, force, digits) => $.isDecimal(stringify(value), {
+    }); },
+    integer: function (value) { return $.isInt(stringify(value)); },
+    decimal: function (value, force, digits) { return $.isDecimal(stringify(value), {
         force_decimal: force,
         decimal_digits: digits,
-    }),
-    boolean: (value) => typeof value === 'boolean',
-    function: (value) => typeof value === 'function',
-    object: (value) => typeof value === 'object',
-    plainObject: (value) => isPlainObject(value),
-    array: (value) => Array.isArray(value),
-    alpha: (value) => $.isAlpha(stringify(value)),
-    alphaNumeric: (value) => $.isAlphanumeric(stringify(value)),
-    email: (value) => $.isEmail(stringify(value)),
-    ip: (value, version) => $.isIP(stringify(value), version),
+    }); },
+    boolean: function (value) { return typeof value === 'boolean'; },
+    function: function (value) { return typeof value === 'function'; },
+    object: function (value) { return typeof value === 'object'; },
+    plainObject: function (value) { return isPlainObject(value); },
+    array: function (value) { return Array.isArray(value); },
+    alpha: function (value) { return $.isAlpha(stringify(value)); },
+    alphaNumeric: function (value) { return $.isAlphanumeric(stringify(value)); },
+    email: function (value) { return $.isEmail(stringify(value)); },
+    ip: function (value, version) { return $.isIP(stringify(value), version); },
     // ipRange: (value: any): boolean => $.isIPRange(stringify(value)),
-    port: (value) => $.isPort(stringify(value)),
-    url: (value) => $.isURL(stringify(value)),
-    macAddress: (value) => $.isMACAddress(stringify(value)),
-    md5: (value) => $.isMD5(stringify(value)),
-    '^az': (value) => /^[a-z]/.test(value),
-    '^az09': (value) => /^[a-z0-9]/.test(value),
-    '^az09_': (value) => /^[a-z0-9_]/.test(value),
-    '^azAZ': (value) => /^[a-zA-Z]/.test(value),
-    '^azAZ09': (value) => /^[a-zA-Z0-9]/.test(value),
-    '^azAZ09_': (value) => /^[a-z0-9_]/.test(value),
-    'az09$': (value) => /[a-z0-9]$/.test(value),
-    'azAZ09$': (value) => /[a-zA-Z0-9]$/.test(value),
-    '^09$': (value) => /^[0-9]+$/.test(value),
-    '^az09$': (value) => /^[a-z0-9]+$/.test(value),
-    '^az09-$': (value) => /^[a-z0-9-]+$/.test(value),
-    '^az09-.$': (value) => /^[a-z0-9-.]+$/.test(value),
-    '^azAZ09$': (value) => /^[a-zA-Z0-9]+$/.test(value),
-    '^azAZ09-$': (value) => /^[a-zA-Z0-9-]+$/.test(value),
-    '^azAZ09_$': (value) => /^[a-zA-Z0-9_]+$/.test(value),
-    '^azAZ09-_$': (value) => /^[a-zA-Z0-9-_]+$/.test(value),
-    'without--': (value) => !/-{2,}/.test(value),
-    'without__': (value) => !/_{2,}/.test(value),
+    port: function (value) { return $.isPort(stringify(value)); },
+    url: function (value) { return $.isURL(stringify(value)); },
+    macAddress: function (value) { return $.isMACAddress(stringify(value)); },
+    md5: function (value) { return $.isMD5(stringify(value)); },
+    '^az': function (value) { return /^[a-z]/.test(value); },
+    '^az09': function (value) { return /^[a-z0-9]/.test(value); },
+    '^az09_': function (value) { return /^[a-z0-9_]/.test(value); },
+    '^azAZ': function (value) { return /^[a-zA-Z]/.test(value); },
+    '^azAZ09': function (value) { return /^[a-zA-Z0-9]/.test(value); },
+    '^azAZ09_': function (value) { return /^[a-z0-9_]/.test(value); },
+    'az09$': function (value) { return /[a-z0-9]$/.test(value); },
+    'azAZ09$': function (value) { return /[a-zA-Z0-9]$/.test(value); },
+    '^09$': function (value) { return /^[0-9]+$/.test(value); },
+    '^az09$': function (value) { return /^[a-z0-9]+$/.test(value); },
+    '^az09-$': function (value) { return /^[a-z0-9-]+$/.test(value); },
+    '^az09-.$': function (value) { return /^[a-z0-9-.]+$/.test(value); },
+    '^azAZ09$': function (value) { return /^[a-zA-Z0-9]+$/.test(value); },
+    '^azAZ09-$': function (value) { return /^[a-zA-Z0-9-]+$/.test(value); },
+    '^azAZ09_$': function (value) { return /^[a-zA-Z0-9_]+$/.test(value); },
+    '^azAZ09-_$': function (value) { return /^[a-zA-Z0-9-_]+$/.test(value); },
+    'without--': function (value) { return !/-{2,}/.test(value); },
+    'without__': function (value) { return !/_{2,}/.test(value); },
 };
 exports.default = validators;
 // oneOf: (value: any, )

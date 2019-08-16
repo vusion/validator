@@ -1,23 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 /* Inspired by vue/src/compiler/parser/filter-parser.js */
-const validDivisionCharRE = /[\w).+\-_$\]]/;
+var validDivisionCharRE = /[\w).+\-_$\]]/;
 function parseRules(exp) {
-    let inSingle = false;
-    let inDouble = false;
-    let inTemplateString = false;
-    let inRegex = false;
-    let curly = 0;
-    let square = 0;
-    let paren = 0;
-    let c;
-    let prev;
-    let i;
-    let lastIndex = 0;
-    let partial;
-    let partialType;
-    let lastRule = undefined;
-    let rules = [];
+    var inSingle = false;
+    var inDouble = false;
+    var inTemplateString = false;
+    var inRegex = false;
+    var curly = 0;
+    var square = 0;
+    var paren = 0;
+    var c;
+    var prev;
+    var i;
+    var lastIndex = 0;
+    var partial;
+    var partialType;
+    var lastRule = undefined;
+    var rules = [];
     for (i = 0; i < exp.length; i++) {
         prev = c;
         c = exp.charCodeAt(i);
@@ -104,8 +104,8 @@ function parseRules(exp) {
                     break; // }
             }
             if (c === 0x2f) { // /
-                let j = i - 1;
-                let p;
+                var j = i - 1;
+                var p = void 0;
                 // find first non-whitespace prev char
                 for (; j >= 0; j--) {
                     p = exp.charAt(j);
