@@ -1,4 +1,4 @@
-{
+export default {
     "required": "{label}不得为空",
     "filled": "{label}不得为空",
     "notEmpty": "{label}不得为空",
@@ -10,7 +10,10 @@
     "max": "不能大于{0}",
     "range": "范围在{0}-{1}之间",
     "pattern": "{label}格式不正确",
-    "equals": "必须与{0}相同",
+    "is": "必须与{0}相同",
+    "isNot": "必须与{0}不同",
+    "equals": "必须等于{0}",
+    "notEquals": "必须不等于{0}",
     "confirmed": "两次输入的密码不一致",
     "includes": "必须包含{args}",
     "excludes": "不能包含{args}",
@@ -28,7 +31,7 @@
     "plainObject": "必须为简单对象",
     "array": "必须为数组",
     "alpha": "请输入字母",
-    "alphaNumeric": "请输入字母或数字",
+    "alphaNum": "请输入字母或数字",
     "email": "请输入正确的邮箱",
     "ip": "请输入正确的 IP",
     "ipRange": "请输入正确的 IP 段",

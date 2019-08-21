@@ -1,8 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 /* Inspired by vue/src/compiler/parser/filter-parser.js */
 var validDivisionCharRE = /[\w).+\-_$\]]/;
-function parseRules(exp) {
+export default function parseRules(exp) {
     var inSingle = false;
     var inDouble = false;
     var inTemplateString = false;
@@ -135,5 +133,4 @@ function parseRules(exp) {
     partialType = undefined;
     return rules;
 }
-exports.default = parseRules;
 //# sourceMappingURL=parseRules.js.map

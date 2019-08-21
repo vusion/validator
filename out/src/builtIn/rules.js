@@ -1,12 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var en_US = require("../locales/en-US.json");
-var zh_CN = require("../locales/zh-CN.json");
+import en_US from '../locales/en-US';
+import zh_CN from '../locales/zh-CN';
 var messages = {
     'en-US': en_US,
     'zh-CN': zh_CN,
 };
-function localizeRules(locale) {
+export default function localizeRules(locale) {
     var localized = messages[locale || 'zh-CN'];
     return {
         required: { required: true, trigger: 'blur', message: localized['required'] },
@@ -20,8 +18,11 @@ function localizeRules(locale) {
         max: { trigger: 'blur', message: localized['max'] },
         range: { trigger: 'blur', message: localized['range'] },
         pattern: { trigger: 'input+blur', message: localized['pattern'] },
+        is: { trigger: 'blur', message: localized['is'] },
+        isNot: { trigger: 'blur', message: localized['isNot'] },
         equals: { trigger: 'blur', message: localized['equals'] },
-        confirmed: { validate: 'equals', trigger: 'blur', message: localized['confirmed'] },
+        notEquals: { trigger: 'blur', message: localized['notEquals'] },
+        confirmed: { validate: 'is', trigger: 'blur', message: localized['confirmed'] },
         includes: { trigger: 'input+blur', message: localized['includes'] },
         excludes: { trigger: 'input+blur', message: localized['excludes'] },
         included: { trigger: 'input+blur', message: localized['included'] },
@@ -38,7 +39,7 @@ function localizeRules(locale) {
         plainObject: { trigger: 'input+blur', message: localized['plainObject'] },
         array: { trigger: 'input+blur', message: localized['array'] },
         alpha: { trigger: 'input+blur', message: localized['alpha'] },
-        alphaNumeric: { trigger: 'input+blur', message: localized['alphaNumeric'] },
+        alphaNum: { trigger: 'input+blur', message: localized['alphaNum'] },
         email: { trigger: 'blur', message: localized['email'] },
         ip: { trigger: 'blur', message: localized['ip'] },
         ipRange: { trigger: 'blur', message: localized['ipRange'] },
@@ -66,5 +67,4 @@ function localizeRules(locale) {
         'without__': { trigger: 'input+blur', message: localized['without__'] },
     };
 }
-exports.default = localizeRules;
 //# sourceMappingURL=rules.js.map

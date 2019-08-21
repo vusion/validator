@@ -1,4 +1,4 @@
-{
+export default {
     "required": "{label}不得为空",
     "filled": "{label}不得为空",
     "notEmpty": "{label}不得为空",
@@ -54,4 +54,5 @@
     "^azAZ09-_$": "以字母、数字、'-'或'_'组成",
     "without--": "不能连续出现中划线",
     "without__": "不能连续出现下划线"
-}
+};
+//# sourceMappingURL=zh-CN.js.map

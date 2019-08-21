@@ -1,5 +1,6 @@
 import { Validator } from '../types';
 const isPlainObject = require('lodash/isPlainObject');
+const isEqual = require('lodash/isEqual');
 import * as $ from 'validator';
 
 const isNil = (value: any): boolean => value === undefined || value === null || value === '';
@@ -38,7 +39,10 @@ const validators = {
     max: (value: any, max: any): boolean => value <= max,
     range: (value: any, min: any, max: any): boolean => min <= value && value <= max,
     pattern: (value: any, re: string | RegExp): boolean => new RegExp(re).test(value),
-    equals: (value: any, arg: any): boolean => value === arg,
+    is: (value: any, arg: any): boolean => value === arg,
+    isNot: (value: any, arg: any): boolean => value !== arg,
+    equals: (value: any, arg: any): boolean => isEqual(value, arg),
+    notEquals: (value: any, arg: any): boolean => !isEqual(value, arg),
     includes: (value: any, ...args: any[]): boolean => args.every((arg) => value.includes(arg)),
     excludes: (value: any, ...args: any[]): boolean => !args.some((arg) => value.includes(arg)),
     included: (value: any, ...args: any[]): boolean => args.includes(value),
@@ -59,7 +63,7 @@ const validators = {
     plainObject: (value: any): boolean => isPlainObject(value),
     array: (value: any): boolean => Array.isArray(value),
     alpha: (value: any): boolean => $.isAlpha(stringify(value)),
-    alphaNumeric: (value: any): boolean => $.isAlphanumeric(stringify(value)),
+    alphaNum: (value: any): boolean => $.isAlphanumeric(stringify(value)),
     email: (value: any): boolean => $.isEmail(stringify(value)),
     ip: (value: any, version: number): boolean => $.isIP(stringify(value), version),
     // ipRange: (value: any): boolean => $.isIPRange(stringify(value)),

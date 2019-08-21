@@ -1,4 +1,4 @@
-{
+export default {
     "required": "The {label} is required",
     "filled": "The {label} is required",
     "notEmpty": "The {label} cannot be empty",
@@ -54,4 +54,5 @@
     "^azAZ09-_$": "May only contain letters, numbers, '-' or '_'",
     "without--": "Two consecutive '-' is forbidden",
     "without__": "Two consecutive '_' is forbidden"
-}
+};
+//# sourceMappingURL=en-US.js.map

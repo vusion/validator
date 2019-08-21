@@ -1,14 +1,13 @@
 const path = require('path');
 
 module.exports = {
+    mode: 'development',
     entry: {
-        bundle: './index.ts',
+        index: './src/index.ts',
     },
     output: {
         path: path.resolve(__dirname, './dist'),
         filename: '[name].js',
-        library: 'TSRepo',
-        libraryTarget: 'umd',
     },
     resolve: {
         extensions: ['.js', '.ts', '.json'],
