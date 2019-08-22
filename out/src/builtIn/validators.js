@@ -126,7 +126,12 @@ var validators = {
     'ascii': function (value) { return $.isAscii(stringify(value)); },
     'base32': function (value) { return $.isBase32(stringify(value)); },
     'base64': function (value) { return $.isBase64(stringify(value)); },
-    'byteLength': function (value, min, max) { return $.isByteLength(stringify(value), min, max); }
+    'byteLength': function (value, min, max) { return $.isByteLength(stringify(value), min, max); },
+    'dataURI': function (value) { return $.isDataURI(stringify(value)); },
+    'magnetURI': function (value) { return $.isMagnetURI(stringify(value)); },
+    'divisibleBy': function (value, divider) { return $.isDivisibleBy(stringify(value), divider); },
+    'fullWidth': function (value) { return $.isFullWidth(stringify(value)); },
+    'halfWidth': function (value) { return $.isHalfWidth(stringify(value)); }
 };
 export default validators;
 // oneOf: (value: any, )

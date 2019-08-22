@@ -103,9 +103,14 @@ const validators = {
     'lowerCase': (value: any): boolean => $.isLowercase(stringify(value)),
     'upperCase': (value: any): boolean => $.isUppercase(stringify(value)),
     'ascii': (value: any): boolean => $.isAscii(stringify(value)),
-    'base32': (value: any): boolean => $.isBase32(stringify(value)),
+    'base32': (value: any): boolean => $.isBase32(stringify(value)), // type丢失
     'base64': (value: any): boolean => $.isBase64(stringify(value)),
-    'byteLength': (value: any, min:number, max:number): boolean => $.isByteLength(stringify(value), min, max)
+    'byteLength': (value: any, min:number, max:number): boolean => $.isByteLength(stringify(value), min, max),
+    'dataURI': (value: any): boolean => $.isDataURI(stringify(value)),
+    'magnetURI': (value: any): boolean => $.isMagnetURI(stringify(value)), // type丢失
+    'divisibleBy': (value: any, divider: number): boolean => $.isDivisibleBy(stringify(value), divider),
+    'fullWidth': (value: any): boolean => $.isFullWidth(stringify(value)),
+    'halfWidth': (value: any): boolean => $.isHalfWidth(stringify(value))
 } as { [prop: string]: Validator };
 
 export default validators;

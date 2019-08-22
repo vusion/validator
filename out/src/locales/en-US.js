@@ -66,6 +66,11 @@ export default {
     "ascii": "Must be ASCII code",
     "base32": "Must be base32 code",
     "base64": "Must be base64 code",
-    "byteLength": "Byte length is out of range"
+    "byteLength": "Byte length is out of range",
+    "dataURI": "Must be dataURI code",
+    "magnetURI": "Must be magnetURI code",
+    "divisibleBy": "Must be divisible by {0}",
+    "fullWidth": "Must be full-width chars",
+    "halfWidth": "Must be half-width chars"
 };
 //# sourceMappingURL=en-US.js.map

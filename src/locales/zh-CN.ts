@@ -66,5 +66,10 @@ export default {
     "ascii": "必须为ASCII",
     "base32": "必须为base32编码",
     "base64": "必须为base64编码",
-    "byteLength": "字节长度不在指定范围内"
+    "byteLength": "字节长度不在指定范围内",
+    "dataURI": "必须为DataURI编码",
+    "magnetURI": "必须为MagnetURI编码",
+    "divisibleBy": "必须被{0}整除",
+    "fullWidth": "必须输入全角字符",
+    "halfWidth": "必须输入半角字符"
 }

@@ -74,7 +74,12 @@ export default function localizeRules(locale) {
         'ascii': { trigger: 'input+blur', message: localized['ascii'] },
         'base32': { trigger: 'input+blur', message: localized['base32'] },
         'base64': { trigger: 'input+blur', message: localized['base64'] },
-        'byteLength': { trigger: 'input+blur', message: localized['byteLength'] }
+        'byteLength': { trigger: 'input+blur', message: localized['byteLength'] },
+        'dataURI': { trigger: 'input+blur', message: localized['dataURI'] },
+        'magnetURI': { trigger: 'input+blur', message: localized['magnetURI'] },
+        'divisibleBy': { trigger: 'input+blur', message: localized['divisibleBy'] },
+        'fullWidth': { trigger: 'input+blur', message: localized['fullWidth'] },
+        'halfWidth': { trigger: 'input+blur', message: localized['halfWidth'] }
     };
 }
 //# sourceMappingURL=rules.js.map

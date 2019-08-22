@@ -79,6 +79,11 @@ export default function localizeRules(locale: string) {
         'ascii': { trigger: 'input+blur', message: localized['ascii'] } as Rule,
         'base32': { trigger: 'input+blur', message: localized['base32'] } as Rule,
         'base64': { trigger: 'input+blur', message: localized['base64'] } as Rule,
-        'byteLength': { trigger: 'input+blur', message: localized['byteLength'] } as Rule
+        'byteLength': { trigger: 'input+blur', message: localized['byteLength'] } as Rule,
+        'dataURI': { trigger: 'input+blur', message: localized['dataURI'] } as Rule,
+        'magnetURI': { trigger: 'input+blur', message: localized['magnetURI'] } as Rule,
+        'divisibleBy': { trigger: 'input+blur', message: localized['divisibleBy'] } as Rule,
+        'fullWidth': { trigger: 'input+blur', message: localized['fullWidth'] } as Rule,
+        'halfWidth': { trigger: 'input+blur', message: localized['halfWidth'] } as Rule
     } as { [prop: string]: Rule };
 }
