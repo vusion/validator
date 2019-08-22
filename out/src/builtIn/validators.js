@@ -115,6 +115,18 @@ var validators = {
     '^azAZ09-_$': function (value) { return /^[a-zA-Z0-9-_]+$/.test(value); },
     'without--': function (value) { return !/-{2,}/.test(value); },
     'without__': function (value) { return !/_{2,}/.test(value); },
+    /**
+     * th3ee added new rules
+     */
+    'alphaDash': function (value) { return /^[a-zA-Z_]+$/.test(value); },
+    'alphaNumDash': function (value) { return /^[a-zA-Z0-9_]+$/.test(value); },
+    'alphaSpaces': function (value) { return /^[a-zA-Z\s]+$/.test(value); },
+    'lowerCase': function (value) { return $.isLowercase(stringify(value)); },
+    'upperCase': function (value) { return $.isUppercase(stringify(value)); },
+    'ascii': function (value) { return $.isAscii(stringify(value)); },
+    'base32': function (value) { return $.isBase32(stringify(value)); },
+    'base64': function (value) { return $.isBase64(stringify(value)); },
+    'byteLength': function (value, min, max) { return $.isByteLength(stringify(value), min, max); }
 };
 export default validators;
 // oneOf: (value: any, )

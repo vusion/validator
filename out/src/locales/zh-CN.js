@@ -56,6 +56,16 @@ export default {
     "^azAZ09_$": "以字母、数字或'_'组成",
     "^azAZ09-_$": "以字母、数字、'-'或'_'组成",
     "without--": "不能连续出现中划线",
-    "without__": "不能连续出现下划线"
+    "without__": "不能连续出现下划线",
+    "noDuplicated": "不能出现重复项目",
+    "alphaDash": "以字母、下划线组成",
+    "alphaNumDash": "以字母、数字或下划线组成",
+    "alphaSpaces": "以字母或空格组成",
+    "lowerCase": "不能出现大写字母",
+    "upperCase": "不能出现小写字母",
+    "ascii": "必须为ASCII",
+    "base32": "必须为base32编码",
+    "base64": "必须为base64编码",
+    "byteLength": "字节长度不在指定范围内"
 };
 //# sourceMappingURL=zh-CN.js.map

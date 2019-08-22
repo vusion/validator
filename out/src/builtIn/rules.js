@@ -66,6 +66,15 @@ export default function localizeRules(locale) {
         '^azAZ09-_$': { trigger: 'input+blur', message: localized['^azAZ09-_$'] },
         'without--': { trigger: 'input+blur', message: localized['without--'] },
         'without__': { trigger: 'input+blur', message: localized['without__'] },
+        'alphaDash': { trigger: 'input+blur', message: localized['alphaDash'] },
+        'alphaNumDash': { trigger: 'input+blur', message: localized['alphaNumDash'] },
+        'alphaSpaces': { trigger: 'input+blur', message: localized['alphaSpaces'] },
+        'lowerCase': { trigger: 'input+blur', message: localized['lowerCase'] },
+        'upperCase': { trigger: 'input+blur', message: localized['upperCase'] },
+        'ascii': { trigger: 'input+blur', message: localized['ascii'] },
+        'base32': { trigger: 'input+blur', message: localized['base32'] },
+        'base64': { trigger: 'input+blur', message: localized['base64'] },
+        'byteLength': { trigger: 'input+blur', message: localized['byteLength'] }
     };
 }
 //# sourceMappingURL=rules.js.map

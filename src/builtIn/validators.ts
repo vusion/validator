@@ -94,6 +94,18 @@ const validators = {
     '^azAZ09-_$': (value: any): boolean => /^[a-zA-Z0-9-_]+$/.test(value),
     'without--': (value: any): boolean => !/-{2,}/.test(value),
     'without__': (value: any): boolean => !/_{2,}/.test(value),
+    /**
+     * th3ee added new rules
+     */
+    'alphaDash': (value: any): boolean => /^[a-zA-Z_]+$/.test(value),
+    'alphaNumDash': (value: any): boolean => /^[a-zA-Z0-9_]+$/.test(value),
+    'alphaSpaces': (value: any): boolean => /^[a-zA-Z\s]+$/.test(value),
+    'lowerCase': (value: any): boolean => $.isLowercase(stringify(value)),
+    'upperCase': (value: any): boolean => $.isUppercase(stringify(value)),
+    'ascii': (value: any): boolean => $.isAscii(stringify(value)),
+    'base32': (value: any): boolean => $.isBase32(stringify(value)),
+    'base64': (value: any): boolean => $.isBase64(stringify(value)),
+    'byteLength': (value: any, min:number, max:number): boolean => $.isByteLength(stringify(value), min, max)
 } as { [prop: string]: Validator };
 
 export default validators;

@@ -56,5 +56,15 @@ export default {
     "^azAZ09_$": "May only contain letters, numbers or '_'",
     "^azAZ09-_$": "May only contain letters, numbers, '-' or '_'",
     "without--": "Two consecutive '-' is forbidden",
-    "without__": "Two consecutive '_' is forbidden"
+    "without__": "Two consecutive '_' is forbidden",
+    "noDuplicated": "Duplicated options selected",
+    "alphaDash": "May only contain letters or '_'",
+    "alphaNumDash": "May only contain a letter, number of '_'",
+    "alphaSpaces": "May only contain letters or blank spaces",
+    "lowerCase": "Uppercase letters are forbidden",
+    "upperCase": "lowercase letters are forbidden",
+    "ascii": "Must be ASCII code",
+    "base32": "Must be base32 code",
+    "base64": "Must be base64 code",
+    "byteLength": "Byte length is out of range"
 }

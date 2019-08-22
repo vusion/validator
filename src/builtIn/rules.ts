@@ -71,5 +71,14 @@ export default function localizeRules(locale: string) {
         '^azAZ09-_$': { trigger: 'input+blur', message: localized['^azAZ09-_$'] } as Rule,
         'without--': { trigger: 'input+blur', message: localized['without--'] } as Rule,
         'without__': { trigger: 'input+blur', message: localized['without__'] } as Rule,
+        'alphaDash': { trigger: 'input+blur', message: localized['alphaDash'] } as Rule,
+        'alphaNumDash': { trigger: 'input+blur', message: localized['alphaNumDash'] } as Rule,
+        'alphaSpaces': { trigger: 'input+blur', message: localized['alphaSpaces'] } as Rule,
+        'lowerCase': { trigger: 'input+blur', message: localized['lowerCase'] } as Rule,
+        'upperCase': { trigger: 'input+blur', message: localized['upperCase'] } as Rule,
+        'ascii': { trigger: 'input+blur', message: localized['ascii'] } as Rule,
+        'base32': { trigger: 'input+blur', message: localized['base32'] } as Rule,
+        'base64': { trigger: 'input+blur', message: localized['base64'] } as Rule,
+        'byteLength': { trigger: 'input+blur', message: localized['byteLength'] } as Rule
     } as { [prop: string]: Rule };
 }
