@@ -1,4 +1,4 @@
-{
+export default {
     "required": "{label}不得为空",
     "filled": "{label}不得为空",
     "notEmpty": "{label}不得为空",
@@ -10,13 +10,15 @@
     "max": "不能大于{0}",
     "range": "范围在{0}-{1}之间",
     "pattern": "{label}格式不正确",
-    "equals": "必须与{0}相同",
+    "is": "必须与{0}相同",
+    "isNot": "必须与{0}不同",
+    "equals": "必须等于{0}",
+    "notEquals": "必须不等于{0}",
     "confirmed": "两次输入的密码不一致",
     "includes": "必须包含{args}",
     "excludes": "不能包含{args}",
     "included": "必须为{args}中的值",
     "excluded": "不能为{args}中的值",
-    "noDuplicated": "不能输入重复的值",
     "unique": "该{label}已经存在",
     "string": "请输入字符串",
     "number": "请输入数字",
@@ -29,7 +31,7 @@
     "plainObject": "必须为简单对象",
     "array": "必须为数组",
     "alpha": "请输入字母",
-    "alphaNumeric": "请输入字母或数字",
+    "alphaNum": "请输入字母或数字",
     "email": "请输入正确的邮箱",
     "ip": "请输入正确的 IP",
     "ipRange": "请输入正确的 IP 段",
@@ -55,4 +57,5 @@
     "^azAZ09-_$": "以字母、数字、'-'或'_'组成",
     "without--": "不能连续出现中划线",
     "without__": "不能连续出现下划线"
-}
+};
+//# sourceMappingURL=zh-CN.js.map

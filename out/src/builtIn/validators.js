@@ -1,8 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 var isPlainObject = require('lodash/isPlainObject');
 var uniqArray = require('lodash/uniq');
-var $ = require("validator");
+var isEqual = require('lodash/isEqual');
+import * as $ from 'validator';
 var isNil = function (value) { return value === undefined || value === null || value === ''; };
 var isEmpty = function (value) {
     if (isNil(value))
@@ -41,7 +40,10 @@ var validators = {
     max: function (value, max) { return value <= max; },
     range: function (value, min, max) { return min <= value && value <= max; },
     pattern: function (value, re) { return new RegExp(re).test(value); },
-    equals: function (value, arg) { return value === arg; },
+    is: function (value, arg) { return value === arg; },
+    isNot: function (value, arg) { return value !== arg; },
+    equals: function (value, arg) { return isEqual(value, arg); },
+    notEquals: function (value, arg) { return !isEqual(value, arg); },
     includes: function (value) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -87,7 +89,7 @@ var validators = {
     plainObject: function (value) { return isPlainObject(value); },
     array: function (value) { return Array.isArray(value); },
     alpha: function (value) { return $.isAlpha(stringify(value)); },
-    alphaNumeric: function (value) { return $.isAlphanumeric(stringify(value)); },
+    alphaNum: function (value) { return $.isAlphanumeric(stringify(value)); },
     email: function (value) { return $.isEmail(stringify(value)); },
     ip: function (value, version) { return $.isIP(stringify(value), version); },
     // ipRange: (value: any): boolean => $.isIPRange(stringify(value)),
@@ -114,7 +116,7 @@ var validators = {
     'without--': function (value) { return !/-{2,}/.test(value); },
     'without__': function (value) { return !/_{2,}/.test(value); },
 };
-exports.default = validators;
+export default validators;
 // oneOf: (value: any, )
 // type: (value: any, )
 //# sourceMappingURL=validators.js.map

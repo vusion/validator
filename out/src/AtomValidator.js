@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -34,10 +33,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var validators_1 = require("./builtIn/validators");
+import buildInValidators from './builtIn/validators';
 // import builtInRules from './builtIn/rules';
-var parseRules_1 = require("./parseRules");
+import parseRules from './parseRules';
 /**
  * @example
  * const atomValidator = new AtomValidator();
@@ -53,7 +51,7 @@ var AtomValidator = /** @class */ (function () {
         var _this = this;
         if (validatingRules === void 0) { validatingRules = []; }
         this.context = context;
-        this.validators = Object.create(validators || validators_1.default);
+        this.validators = Object.create(validators || buildInValidators);
         this.rules = Object.create(rules || {});
         Object.keys(this.rules).forEach(function (key) {
             var rule = _this.rules[key];
@@ -120,7 +118,7 @@ var AtomValidator = /** @class */ (function () {
                                             validate = rule.validate;
                                         result = void 0;
                                         // @note: 如果 rule 中没有 required 字段，则自动忽略为空的情况
-                                        if (!rule.required && !validators_1.default.required(value))
+                                        if (!rule.required && !buildInValidators.required(value))
                                             result = true;
                                         else
                                             result = validate.call(this_1.context, value, rule, options);
@@ -189,7 +187,7 @@ var AtomValidator = /** @class */ (function () {
     };
     AtomValidator.prototype.parseRules = function (rules, originalName) {
         var _this = this;
-        var parsedRules = parseRules_1.default(rules);
+        var parsedRules = parseRules(rules);
         var TRIGGER_CASES = {
             'i': 'input',
             'b': 'blur',
@@ -244,5 +242,5 @@ var AtomValidator = /** @class */ (function () {
     };
     return AtomValidator;
 }());
-exports.default = AtomValidator;
+export default AtomValidator;
 //# sourceMappingURL=AtomValidator.js.map

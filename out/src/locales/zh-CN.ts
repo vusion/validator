@@ -1,4 +1,4 @@
-{
+export default {
     "required": "{label}不得为空",
     "filled": "{label}不得为空",
     "notEmpty": "{label}不得为空",
@@ -16,7 +16,6 @@
     "excludes": "不能包含{args}",
     "included": "必须为{args}中的值",
     "excluded": "不能为{args}中的值",
-    "noDuplicated": "不能输入重复的值",
     "unique": "该{label}已经存在",
     "string": "请输入字符串",
     "number": "请输入数字",
@@ -56,3 +55,4 @@
     "without--": "不能连续出现中划线",
     "without__": "不能连续出现下划线"
 }
+

@@ -1,7 +1,7 @@
 import { Validator, Rule } from "../types";
 
-import * as en_US from '../locales/en-US.json';
-import * as zh_CN from '../locales/zh-CN.json';
+import en_US from '../locales/en-US';
+import zh_CN from '../locales/zh-CN';
 
 const messages: { [prop: string]: { [prop: string]: string } } = {
     'en-US': en_US,
@@ -23,8 +23,11 @@ export default function localizeRules(locale: string) {
         max: { trigger: 'blur', message: localized['max'] } as Rule,
         range: { trigger: 'blur', message: localized['range'] } as Rule,
         pattern: { trigger: 'input+blur', message: localized['pattern'] } as Rule,
+        is: { trigger: 'blur', message: localized['is'] } as Rule,
+        isNot: { trigger: 'blur', message: localized['isNot'] } as Rule,
         equals: { trigger: 'blur', message: localized['equals'] } as Rule,
-        confirmed: { validate: 'equals', trigger: 'blur', message: localized['confirmed'] } as Rule,
+        notEquals: { trigger: 'blur', message: localized['notEquals'] } as Rule,
+        confirmed: { validate: 'is', trigger: 'blur', message: localized['confirmed'] } as Rule,
         includes: { trigger: 'input+blur', message: localized['includes'] } as Rule,
         excludes: { trigger: 'input+blur', message: localized['excludes'] } as Rule,
         included: { trigger: 'input+blur', message: localized['included'] } as Rule,
@@ -42,7 +45,7 @@ export default function localizeRules(locale: string) {
         plainObject: { trigger: 'input+blur', message: localized['plainObject'] } as Rule,
         array: { trigger: 'input+blur', message: localized['array'] } as Rule,
         alpha: { trigger: 'input+blur', message: localized['alpha'] } as Rule,
-        alphaNumeric: { trigger: 'input+blur', message: localized['alphaNumeric'] } as Rule,
+        alphaNum: { trigger: 'input+blur', message: localized['alphaNum'] } as Rule,
         email: { trigger: 'blur', message: localized['email'] } as Rule,
         ip: { trigger: 'blur', message: localized['ip'] } as Rule,
         ipRange: { trigger: 'blur', message: localized['ipRange'] } as Rule,
