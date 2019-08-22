@@ -1,5 +1,6 @@
 import { Validator } from '../types';
 const isPlainObject = require('lodash/isPlainObject');
+const uniqArray = require('lodash/uniq');
 import * as $ from 'validator';
 
 const isNil = (value: any): boolean => value === undefined || value === null || value === '';
@@ -12,6 +13,9 @@ const isEmpty = (value: any): boolean => {
         return !Object.keys(value).length;
     else
         return false;
+}
+const isDuplicated = (value: any): boolean => {
+    return !(value.length === uniqArray(value).length);
 }
 const stringify = (value: any): string => {
     if (isNil(value))
@@ -43,6 +47,7 @@ const validators = {
     excludes: (value: any, ...args: any[]): boolean => !args.some((arg) => value.includes(arg)),
     included: (value: any, ...args: any[]): boolean => args.includes(value),
     excluded: (value: any, ...args: any[]): boolean => !args.includes(value),
+    noDuplicated: (value: any): boolean => !isDuplicated(value),
     string: (value: any): boolean => typeof value === 'string',
     number: (value: any): boolean => typeof value === 'number',
     numeric: (value: any, noSymbols?: boolean): boolean => $.isNumeric(stringify(value), {

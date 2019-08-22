@@ -26,6 +26,7 @@ function localizeRules(locale) {
         excludes: { trigger: 'input+blur', message: localized['excludes'] },
         included: { trigger: 'input+blur', message: localized['included'] },
         excluded: { trigger: 'input+blur', message: localized['excluded'] },
+        noDuplicated: { trigger: 'input+blur', message: localized['noDuplicated'] },
         unique: { validate: 'excluded', trigger: 'blur', message: localized['unique'] },
         string: { trigger: 'input+blur', message: localized['string'] },
         number: { trigger: 'input+blur', message: localized['number'] },

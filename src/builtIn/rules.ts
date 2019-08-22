@@ -29,6 +29,7 @@ export default function localizeRules(locale: string) {
         excludes: { trigger: 'input+blur', message: localized['excludes'] } as Rule,
         included: { trigger: 'input+blur', message: localized['included'] } as Rule,
         excluded: { trigger: 'input+blur', message: localized['excluded'] } as Rule,
+        noDuplicated: {trigger: 'input+blur', message: localized['noDuplicated']} as Rule,
         unique: { validate: 'excluded', trigger: 'blur', message: localized['unique'] } as Rule,
         string: { trigger: 'input+blur', message: localized['string'] } as Rule,
         number: { trigger: 'input+blur', message: localized['number'] } as Rule,

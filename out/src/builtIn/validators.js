@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var isPlainObject = require('lodash/isPlainObject');
+var uniqArray = require('lodash/uniq');
 var $ = require("validator");
 var isNil = function (value) { return value === undefined || value === null || value === ''; };
 var isEmpty = function (value) {
@@ -12,6 +13,9 @@ var isEmpty = function (value) {
         return !Object.keys(value).length;
     else
         return false;
+};
+var isDuplicated = function (value) {
+    return !(value.length === uniqArray(value).length);
 };
 var stringify = function (value) {
     if (isNil(value))
@@ -66,6 +70,7 @@ var validators = {
         }
         return !args.includes(value);
     },
+    noDuplicated: function (value) { return !isDuplicated(value); },
     string: function (value) { return typeof value === 'string'; },
     number: function (value) { return typeof value === 'number'; },
     numeric: function (value, noSymbols) { return $.isNumeric(stringify(value), {

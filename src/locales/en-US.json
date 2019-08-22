@@ -16,6 +16,7 @@
     "excludes": "The {label} cannot include {args}",
     "included": "The {label} must be a value of {args}",
     "excluded": "The {label} cannot be a value of {args}",
+    "noDuplicated": "The {label} cannot include duplicated content",
     "unique": "The {label} already exists",
     "string": "Must be a string",
     "number": "Must be a number",
