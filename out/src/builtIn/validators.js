@@ -124,14 +124,32 @@ var validators = {
     'lowerCase': function (value) { return $.isLowercase(stringify(value)); },
     'upperCase': function (value) { return $.isUppercase(stringify(value)); },
     'ascii': function (value) { return $.isAscii(stringify(value)); },
-    'base32': function (value) { return $.isBase32(stringify(value)); },
+    //'base32': (value: any): boolean => $.isBase32(stringify(value)), // type丢失
     'base64': function (value) { return $.isBase64(stringify(value)); },
     'byteLength': function (value, min, max) { return $.isByteLength(stringify(value), min, max); },
     'dataURI': function (value) { return $.isDataURI(stringify(value)); },
-    'magnetURI': function (value) { return $.isMagnetURI(stringify(value)); },
-    'divisibleBy': function (value, divider) { return $.isDivisibleBy(stringify(value), divider); },
-    'fullWidth': function (value) { return $.isFullWidth(stringify(value)); },
-    'halfWidth': function (value) { return $.isHalfWidth(stringify(value)); }
+    //'magnetURI': (value: any): boolean => $.isMagnetURI(stringify(value)), // type丢失
+    'divisibleBy': function (value, divisor) { return $.isDivisibleBy(stringify(value), divisor); },
+    'halfWidth': function (value) { return !$.isFullWidth(stringify(value)); },
+    'fullWidth': function (value) { return !$.isHalfWidth(stringify(value)); },
+    'hash': function (value, algorithm) { return $.isHash(stringify(value), algorithm); },
+    'hexColor': function (value) { return $.isHexColor(stringify(value)); },
+    'hex': function (value) { return $.isHexadecimal(stringify(value)); },
+    //'identityCard': (value: any, locale: any) => $.isIdentityCard(stringify(value), locale ? locale : 'any'),
+    'creditCard': function (value) { return $.isCreditCard(stringify(value)); },
+    'fqdn': function (value) { return $.isFQDN(stringify(value)); },
+    //'ipRange': (value: any): boolean => $.isIPRange(stringify(value)),
+    'ipOrFQDN': function (value) { return $.isFQDN(stringify(value)) || $.isIP(stringify(value)); },
+    'isbn': function (value, version) { return $.isISBN(stringify(value), version); },
+    'issn': function (value) { return $.isISSN(stringify(value)); },
+    'isin': function (value) { return $.isISIN(stringify(value)); },
+    'iso8601': function (value, strict) { return $.isISO8601(stringify(value), { strict: strict }); },
+    //'rfc3339': (value: any): boolean => $.isRFC3339(stringify(value)),
+    'iso31661Alpha2': function (value) { return $.isISO31661Alpha2(stringify(value)); },
+    'iso31661Alpha3': function (value) { return $.isISO31661Alpha3(stringify(value)); },
+    'json': function (value) { return $.isJSON(stringify(value)); },
+    'jwt': function (value) { return $.isJWT(stringify(value)); },
+    'latLong': function (value) { return $.isLatLong(stringify(value)); },
 };
 export default validators;
 // oneOf: (value: any, )

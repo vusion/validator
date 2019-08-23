@@ -71,6 +71,23 @@ export default {
     "magnetURI": "Must be magnetURI code",
     "divisibleBy": "Must be divisible by {0}",
     "fullWidth": "Must be full-width chars",
-    "halfWidth": "Must be half-width chars"
+    "halfWidth": "Must be half-width chars",
+    "hash": "Hash code is inconsistent with algorithm {0}",
+    "hexColor": "Must be hexadecimal color code",
+    "hex": "Must be hexadecimal number",
+    "identityCard": "Must be valid identity card number",
+    "creditCard": "Must be valid credit card number",
+    "fqdn": "Must be valid FQDN",
+    "ipOrFQDN": "Must be an IP or FQDN",
+    "isbn": "Must be valid ISBN",
+    "issn": "Must be valid ISSN",
+    "isin": "Must be valid ISIN",
+    "iso8601": "Must be ISO8601 date format",
+    "rfc3339": "Must be RFC3339 date format",
+    "iso31661Alpha2": "Must be ISO 3166-1 Alpha-2 official assigned country code",
+    "iso31661Alpha3": "Must be ISO 3166-1 Alpha-3 official assigned country code",
+    "json": "Must be JSON format string",
+    "jwt": "Must be valid JSON Web Token",
+    "latLong": "Must be valid lat-long coordinate"
 };
 //# sourceMappingURL=en-US.js.map

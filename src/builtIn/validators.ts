@@ -3,6 +3,7 @@ const isPlainObject = require('lodash/isPlainObject');
 const uniqArray = require('lodash/uniq');
 const isEqual = require('lodash/isEqual');
 import * as $ from 'validator';
+import {version} from "punycode";
 
 const isNil = (value: any): boolean => value === undefined || value === null || value === '';
 const isEmpty = (value: any): boolean => {
@@ -103,14 +104,32 @@ const validators = {
     'lowerCase': (value: any): boolean => $.isLowercase(stringify(value)),
     'upperCase': (value: any): boolean => $.isUppercase(stringify(value)),
     'ascii': (value: any): boolean => $.isAscii(stringify(value)),
-    'base32': (value: any): boolean => $.isBase32(stringify(value)), // type丢失
+    //'base32': (value: any): boolean => $.isBase32(stringify(value)), // type丢失
     'base64': (value: any): boolean => $.isBase64(stringify(value)),
     'byteLength': (value: any, min:number, max:number): boolean => $.isByteLength(stringify(value), min, max),
     'dataURI': (value: any): boolean => $.isDataURI(stringify(value)),
-    'magnetURI': (value: any): boolean => $.isMagnetURI(stringify(value)), // type丢失
-    'divisibleBy': (value: any, divider: number): boolean => $.isDivisibleBy(stringify(value), divider),
-    'fullWidth': (value: any): boolean => $.isFullWidth(stringify(value)),
-    'halfWidth': (value: any): boolean => $.isHalfWidth(stringify(value))
+    //'magnetURI': (value: any): boolean => $.isMagnetURI(stringify(value)), // type丢失
+    'divisibleBy': (value: any, divisor: number): boolean => $.isDivisibleBy(stringify(value), divisor),
+    'halfWidth': (value: any): boolean => !$.isFullWidth(stringify(value)),
+    'fullWidth': (value: any): boolean => !$.isHalfWidth(stringify(value)),
+    'hash': (value: any, algorithm: any): boolean => $.isHash(stringify(value), algorithm),
+    'hexColor': (value: any): boolean => $.isHexColor(stringify(value)),
+    'hex': (value: any): boolean => $.isHexadecimal(stringify(value)),
+    //'identityCard': (value: any, locale: any) => $.isIdentityCard(stringify(value), locale ? locale : 'any'),
+    'creditCard': (value: any): boolean => $.isCreditCard(stringify(value)),
+    'fqdn': (value: any): boolean => $.isFQDN(stringify(value)),
+    //'ipRange': (value: any): boolean => $.isIPRange(stringify(value)),
+    'ipOrFQDN': (value: any): boolean => $.isFQDN(stringify(value)) || $.isIP(stringify(value)),
+    'isbn': (value: any, version: number): boolean => $.isISBN(stringify(value), version),
+    'issn': (value: any): boolean => $.isISSN(stringify(value)),
+    'isin': (value: any): boolean => $.isISIN(stringify(value)),
+    'iso8601': (value: any, strict: boolean): boolean => $.isISO8601(stringify(value), {strict: strict}),
+    //'rfc3339': (value: any): boolean => $.isRFC3339(stringify(value)),
+    'iso31661Alpha2': (value: any): boolean => $.isISO31661Alpha2(stringify(value)),
+    'iso31661Alpha3': (value: any): boolean => $.isISO31661Alpha3(stringify(value)),
+    'json': (value: any): boolean => $.isJSON(stringify(value)),
+    'jwt': (value: any): boolean => $.isJWT(stringify(value)),
+    'latLong': (value: any): boolean => $.isLatLong(stringify(value)),
 } as { [prop: string]: Validator };
 
 export default validators;
