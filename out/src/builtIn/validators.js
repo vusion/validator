@@ -16,6 +16,9 @@ var isEmpty = function (value) {
 var isDuplicated = function (value) {
     return !(value.length === uniqArray(value).length);
 };
+var isChinese = function (value) {
+    return /^[\u4e00-\u9fa5]+$/gi.test(value);
+};
 var stringify = function (value) {
     if (isNil(value))
         return '';
@@ -72,7 +75,7 @@ var validators = {
         }
         return !args.includes(value);
     },
-    noDuplicated: function (value) { return !isDuplicated(value); },
+    noDuplicates: function (value) { return !isDuplicated(value); },
     string: function (value) { return typeof value === 'string'; },
     number: function (value) { return typeof value === 'number'; },
     numeric: function (value, noSymbols) { return $.isNumeric(stringify(value), {
@@ -150,6 +153,11 @@ var validators = {
     'json': function (value) { return $.isJSON(stringify(value)); },
     'jwt': function (value) { return $.isJWT(stringify(value)); },
     'latLong': function (value) { return $.isLatLong(stringify(value)); },
+    'mobile': function (value, locale, strict) { return $.isMobilePhone(stringify(value), locale, { strictMode: strict }); },
+    'mongoId': function (value) { return $.isMongoId(stringify(value)); },
+    'postalCode': function (value, locale) { return $.isPostalCode(stringify(value), locale); },
+    'uuid': function (value, version) { return $.isUUID(stringify(value), version ? version : 'all'); },
+    'chinese': function (value) { return isChinese(stringify(value)); }
 };
 export default validators;
 // oneOf: (value: any, )

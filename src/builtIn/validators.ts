@@ -19,6 +19,9 @@ const isEmpty = (value: any): boolean => {
 const isDuplicated = (value: any): boolean => {
     return !(value.length === uniqArray(value).length);
 }
+const isChinese = (value: any) => {
+    return /^[\u4e00-\u9fa5]+$/gi.test(value);
+}
 const stringify = (value: any): string => {
     if (isNil(value))
         return '';
@@ -52,7 +55,7 @@ const validators = {
     excludes: (value: any, ...args: any[]): boolean => !args.some((arg) => value.includes(arg)),
     included: (value: any, ...args: any[]): boolean => args.includes(value),
     excluded: (value: any, ...args: any[]): boolean => !args.includes(value),
-    noDuplicated: (value: any): boolean => !isDuplicated(value),
+    noDuplicates: (value: any): boolean => !isDuplicated(value),
     string: (value: any): boolean => typeof value === 'string',
     number: (value: any): boolean => typeof value === 'number',
     numeric: (value: any, noSymbols?: boolean): boolean => $.isNumeric(stringify(value), {
@@ -130,6 +133,11 @@ const validators = {
     'json': (value: any): boolean => $.isJSON(stringify(value)),
     'jwt': (value: any): boolean => $.isJWT(stringify(value)),
     'latLong': (value: any): boolean => $.isLatLong(stringify(value)),
+    'mobile': (value: any, locale?: any, strict?: boolean): boolean => $.isMobilePhone(stringify(value), locale, {strictMode: strict}),
+    'mongoId': (value: any): boolean => $.isMongoId(stringify(value)),
+    'postalCode': (value: any, locale: any): boolean => $.isPostalCode(stringify(value), locale),
+    'uuid': (value: any, version?: any): boolean => $.isUUID(stringify(value), version ? version : 'all'),
+    'chinese': (value: any): boolean => isChinese(stringify(value))
 } as { [prop: string]: Validator };
 
 export default validators;

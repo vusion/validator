@@ -57,7 +57,7 @@ export default {
     "^azAZ09-_$": "May only contain letters, numbers, '-' or '_'",
     "without--": "Two consecutive '-' is forbidden",
     "without__": "Two consecutive '_' is forbidden",
-    "noDuplicated": "Duplicated options selected",
+    "noDuplicates": "Duplicated options selected",
     "alphaDash": "May only contain letters or '_'",
     "alphaNumDash": "May only contain a letter, number of '_'",
     "alphaSpaces": "May only contain letters or blank spaces",
@@ -88,6 +88,11 @@ export default {
     "iso31661Alpha3": "Must be ISO 3166-1 Alpha-3 official assigned country code",
     "json": "Must be JSON format string",
     "jwt": "Must be valid JSON Web Token",
-    "latLong": "Must be valid lat-long coordinate"
+    "latLong": "Must be valid lat-long coordinate",
+    "mobile": "Must be valid mobile phone number",
+    "mongoId": "Must be a valid hex-encoded representation of a MongoDB ObjectId",
+    "postalCode": "Must be valid postal code",
+    "uuid": "Must be valid UUID",
+    "chinese": "Must be valid Chinese content"
 };
 //# sourceMappingURL=en-US.js.map

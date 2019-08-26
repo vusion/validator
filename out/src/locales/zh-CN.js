@@ -57,7 +57,7 @@ export default {
     "^azAZ09-_$": "以字母、数字、'-'或'_'组成",
     "without--": "不能连续出现中划线",
     "without__": "不能连续出现下划线",
-    "noDuplicated": "不能出现重复项目",
+    "noDuplicates": "不能出现重复项目",
     "alphaDash": "以字母、下划线组成",
     "alphaNumDash": "以字母、数字或下划线组成",
     "alphaSpaces": "以字母或空格组成",
@@ -88,6 +88,11 @@ export default {
     "iso31661Alpha3": "必须输入合法的ISO 3166-1 Alpha-3国家代码",
     "json": "必须输入JSON格式字符串",
     "jwt": "必须输入合法的JSON Web Token",
-    "latLong": "必须输入合法的经纬度坐标"
+    "latLong": "必须输入合法的经纬度坐标",
+    "mobile": "必须输入合法的移动电话号码",
+    "mongoId": "必须输入合法的MongoDB对象ID",
+    "postalCode": "必须输入合法的邮政编码",
+    "uuid": "必须输入合法的UUID",
+    "chinese": "必须输入合法的中文内容"
 };
 //# sourceMappingURL=zh-CN.js.map

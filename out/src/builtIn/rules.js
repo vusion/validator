@@ -27,7 +27,7 @@ export default function localizeRules(locale) {
         excludes: { trigger: 'input+blur', message: localized['excludes'] },
         included: { trigger: 'input+blur', message: localized['included'] },
         excluded: { trigger: 'input+blur', message: localized['excluded'] },
-        noDuplicated: { trigger: 'input+blur', message: localized['noDuplicated'] },
+        noDuplicates: { trigger: 'input+blur', message: localized['noDuplicates'] },
         unique: { validate: 'excluded', trigger: 'blur', message: localized['unique'] },
         string: { trigger: 'input+blur', message: localized['string'] },
         number: { trigger: 'input+blur', message: localized['number'] },
@@ -98,6 +98,11 @@ export default function localizeRules(locale) {
         'json': { trigger: 'blur+input', message: localized['json'] },
         'jwt': { trigger: 'blur', message: localized['jwt'] },
         'latLong': { trigger: 'blur', message: localized['latLong'] },
+        'mobile': { trigger: 'blur', message: localized['mobile'] },
+        'mongoId': { trigger: 'blur', message: localized['mongoId'] },
+        'postalCode': { trigger: 'blur', message: localized['postalCode'] },
+        'uuid': { trigger: 'blur', message: localized['uuid'] },
+        'chinese': { trigger: 'input+blur', message: localized['chinese'] },
     };
 }
 //# sourceMappingURL=rules.js.map

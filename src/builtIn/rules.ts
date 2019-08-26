@@ -32,7 +32,7 @@ export default function localizeRules(locale: string) {
         excludes: { trigger: 'input+blur', message: localized['excludes'] } as Rule,
         included: { trigger: 'input+blur', message: localized['included'] } as Rule,
         excluded: { trigger: 'input+blur', message: localized['excluded'] } as Rule,
-        noDuplicated: {trigger: 'input+blur', message: localized['noDuplicated']} as Rule,
+        noDuplicates: {trigger: 'input+blur', message: localized['noDuplicates']} as Rule,
         unique: { validate: 'excluded', trigger: 'blur', message: localized['unique'] } as Rule,
         string: { trigger: 'input+blur', message: localized['string'] } as Rule,
         number: { trigger: 'input+blur', message: localized['number'] } as Rule,
@@ -103,5 +103,10 @@ export default function localizeRules(locale: string) {
         'json': { trigger: 'blur+input', message: localized['json'] } as Rule,
         'jwt': { trigger: 'blur', message: localized['jwt'] } as Rule,
         'latLong': { trigger: 'blur', message: localized['latLong'] } as Rule,
+        'mobile': {trigger: 'blur', message: localized['mobile']} as Rule,
+        'mongoId': {trigger: 'blur', message: localized['mongoId']} as Rule,
+        'postalCode': {trigger: 'blur', message: localized['postalCode']} as Rule,
+        'uuid': {trigger: 'blur', message: localized['uuid']} as Rule,
+        'chinese': {trigger: 'input+blur', message: localized['chinese']} as Rule,
     } as { [prop: string]: Rule };
 }
