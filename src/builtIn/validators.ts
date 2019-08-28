@@ -1,11 +1,18 @@
 import { Validator } from '../types';
 const isPlainObject = require('lodash/isPlainObject');
-const uniqArray = require('lodash/uniq');
 const isEqual = require('lodash/isEqual');
 import * as $ from 'validator';
-import {version} from "punycode";
 
+/**
+ * 判断是否为空值（简单类型），undefined、null 或 ''
+ * @param value
+ */
 const isNil = (value: any): boolean => value === undefined || value === null || value === '';
+
+/**
+ * 判断是否为空值（简单类型+复杂类型），除了 undefined、null 或 ''，还包括空 [] 或 {}
+ * @param value
+ */
 const isEmpty = (value: any): boolean => {
     if (isNil(value))
         return true;
@@ -16,12 +23,13 @@ const isEmpty = (value: any): boolean => {
     else
         return false;
 }
-const isDuplicated = (value: any): boolean => {
-    return !(value.length === uniqArray(value).length);
-}
+
+const hasDuplicates = (value: Array<any>): boolean => value.length !== new Set(value).size;
+
 const isChinese = (value: any) => {
     return /^[\u4e00-\u9fa5]+$/gi.test(value);
 }
+
 const stringify = (value: any): string => {
     if (isNil(value))
         return '';
@@ -55,7 +63,7 @@ const validators = {
     excludes: (value: any, ...args: any[]): boolean => !args.some((arg) => value.includes(arg)),
     included: (value: any, ...args: any[]): boolean => args.includes(value),
     excluded: (value: any, ...args: any[]): boolean => !args.includes(value),
-    noDuplicates: (value: any): boolean => !isDuplicated(value),
+    noDuplicates: (value: Array<any>): boolean => !hasDuplicates(value),
     string: (value: any): boolean => typeof value === 'string',
     number: (value: any): boolean => typeof value === 'number',
     numeric: (value: any, noSymbols?: boolean): boolean => $.isNumeric(stringify(value), {
@@ -73,13 +81,11 @@ const validators = {
     array: (value: any): boolean => Array.isArray(value),
     alpha: (value: any): boolean => $.isAlpha(stringify(value)),
     alphaNum: (value: any): boolean => $.isAlphanumeric(stringify(value)),
-    email: (value: any): boolean => $.isEmail(stringify(value)),
-    ip: (value: any, version: number): boolean => $.isIP(stringify(value), version),
-    // ipRange: (value: any): boolean => $.isIPRange(stringify(value)),
-    port: (value: any) => $.isPort(stringify(value)),
-    url: (value: any) => $.isURL(stringify(value)),
-    macAddress: (value: any): boolean => $.isMACAddress(stringify(value)),
-    md5: (value: any): boolean => $.isMD5(stringify(value)),
+    alphaDash: (value: any): boolean => /^[a-zA-Z_]+$/.test(value),
+    alphaNumDash: (value: any): boolean => /^[a-zA-Z0-9_]+$/.test(value),
+    alphaSpaces: (value: any): boolean => /^[a-zA-Z\s]+$/.test(value),
+    lowerCase: (value: any): boolean => $.isLowercase(stringify(value)),
+    upperCase: (value: any): boolean => $.isUppercase(stringify(value)),
     '^az': (value: any): boolean => /^[a-z]/.test(value),
     '^az09': (value: any): boolean => /^[a-z0-9]/.test(value),
     '^az09_': (value: any): boolean => /^[a-z0-9_]/.test(value),
@@ -98,49 +104,46 @@ const validators = {
     '^azAZ09-_$': (value: any): boolean => /^[a-zA-Z0-9-_]+$/.test(value),
     'without--': (value: any): boolean => !/-{2,}/.test(value),
     'without__': (value: any): boolean => !/_{2,}/.test(value),
-    /**
-     * th3ee added new rules
-     */
-    'alphaDash': (value: any): boolean => /^[a-zA-Z_]+$/.test(value),
-    'alphaNumDash': (value: any): boolean => /^[a-zA-Z0-9_]+$/.test(value),
-    'alphaSpaces': (value: any): boolean => /^[a-zA-Z\s]+$/.test(value),
-    'lowerCase': (value: any): boolean => $.isLowercase(stringify(value)),
-    'upperCase': (value: any): boolean => $.isUppercase(stringify(value)),
-    'ascii': (value: any): boolean => $.isAscii(stringify(value)),
-    //'base32': (value: any): boolean => $.isBase32(stringify(value)), // type丢失
-    'base64': (value: any): boolean => $.isBase64(stringify(value)),
-    'byteLength': (value: any, min:number, max:number): boolean => $.isByteLength(stringify(value), min, max),
-    'dataURI': (value: any): boolean => $.isDataURI(stringify(value)),
-    //'magnetURI': (value: any): boolean => $.isMagnetURI(stringify(value)), // type丢失
-    'divisibleBy': (value: any, divisor: number): boolean => $.isDivisibleBy(stringify(value), divisor),
-    'halfWidth': (value: any): boolean => !$.isFullWidth(stringify(value)),
-    'fullWidth': (value: any): boolean => !$.isHalfWidth(stringify(value)),
-    'hash': (value: any, algorithm: any): boolean => $.isHash(stringify(value), algorithm),
-    'hexColor': (value: any): boolean => $.isHexColor(stringify(value)),
-    'hex': (value: any): boolean => $.isHexadecimal(stringify(value)),
-    //'identityCard': (value: any, locale: any) => $.isIdentityCard(stringify(value), locale ? locale : 'any'),
-    'creditCard': (value: any): boolean => $.isCreditCard(stringify(value)),
-    'fqdn': (value: any): boolean => $.isFQDN(stringify(value)),
-    //'ipRange': (value: any): boolean => $.isIPRange(stringify(value)),
-    'ipOrFQDN': (value: any): boolean => $.isFQDN(stringify(value)) || $.isIP(stringify(value)),
-    'isbn': (value: any, version: number): boolean => $.isISBN(stringify(value), version),
-    'issn': (value: any): boolean => $.isISSN(stringify(value)),
-    'isin': (value: any): boolean => $.isISIN(stringify(value)),
-    'iso8601': (value: any, strict: boolean): boolean => $.isISO8601(stringify(value), {strict: strict}),
-    //'rfc3339': (value: any): boolean => $.isRFC3339(stringify(value)),
-    'iso31661Alpha2': (value: any): boolean => $.isISO31661Alpha2(stringify(value)),
-    'iso31661Alpha3': (value: any): boolean => $.isISO31661Alpha3(stringify(value)),
-    'json': (value: any): boolean => $.isJSON(stringify(value)),
-    'jwt': (value: any): boolean => $.isJWT(stringify(value)),
-    'latLong': (value: any): boolean => $.isLatLong(stringify(value)),
-    'mobile': (value: any, locale?: any, strict?: boolean): boolean => $.isMobilePhone(stringify(value), locale, {strictMode: strict}),
-    'mongoId': (value: any): boolean => $.isMongoId(stringify(value)),
-    'postalCode': (value: any, locale: any): boolean => $.isPostalCode(stringify(value), locale),
-    'uuid': (value: any, version?: any): boolean => $.isUUID(stringify(value), version ? version : 'all'),
-    'chinese': (value: any): boolean => isChinese(stringify(value))
+    email: (value: any): boolean => $.isEmail(stringify(value)),
+    ip: (value: any, version: number): boolean => $.isIP(stringify(value), version),
+    // ipRange: (value: any): boolean => $.isIPRange(stringify(value)),
+    port: (value: any) => $.isPort(stringify(value)),
+    url: (value: any) => $.isURL(stringify(value)),
+    macAddress: (value: any): boolean => $.isMACAddress(stringify(value)),
+    md5: (value: any): boolean => $.isMD5(stringify(value)),
+    ascii: (value: any): boolean => $.isAscii(stringify(value)),
+    // base32: (value: any): boolean => $.isBase32(stringify(value)), // type丢失
+    base64: (value: any): boolean => $.isBase64(stringify(value)),
+    byteLength: (value: any, min:number, max:number): boolean => $.isByteLength(stringify(value), min, max),
+    dataURI: (value: any): boolean => $.isDataURI(stringify(value)),
+    // magnetURI: (value: any): boolean => $.isMagnetURI(stringify(value)), // type丢失
+    divisibleBy: (value: any, divisor: number): boolean => $.isDivisibleBy(stringify(value), divisor),
+    halfWidth: (value: any): boolean => !$.isFullWidth(stringify(value)),
+    fullWidth: (value: any): boolean => !$.isHalfWidth(stringify(value)),
+    hash: (value: any, algorithm: any): boolean => $.isHash(stringify(value), algorithm),
+    hexColor: (value: any): boolean => $.isHexColor(stringify(value)),
+    hex: (value: any): boolean => $.isHexadecimal(stringify(value)),
+    // identityCard: (value: any, locale: any) => $.isIdentityCard(stringify(value), locale ? locale : 'any'),
+    creditCard: (value: any): boolean => $.isCreditCard(stringify(value)),
+    fqdn: (value: any): boolean => $.isFQDN(stringify(value)),
+    // ipRange: (value: any): boolean => $.isIPRange(stringify(value)),
+    ipOrFQDN: (value: any): boolean => $.isFQDN(stringify(value)) || $.isIP(stringify(value)),
+    isbn: (value: any, version: number): boolean => $.isISBN(stringify(value), version),
+    issn: (value: any): boolean => $.isISSN(stringify(value)),
+    isin: (value: any): boolean => $.isISIN(stringify(value)),
+    iso8601: (value: any, strict: boolean): boolean => $.isISO8601(stringify(value), {strict: strict}),
+    // rfc3339: (value: any): boolean => $.isRFC3339(stringify(value)),
+    iso31661Alpha2: (value: any): boolean => $.isISO31661Alpha2(stringify(value)),
+    iso31661Alpha3: (value: any): boolean => $.isISO31661Alpha3(stringify(value)),
+    json: (value: any): boolean => $.isJSON(stringify(value)),
+    jwt: (value: any): boolean => $.isJWT(stringify(value)),
+    latLong: (value: any): boolean => $.isLatLong(stringify(value)),
+    mobile: (value: any, locale?: any, strict?: boolean): boolean => $.isMobilePhone(stringify(value), locale, {strictMode: strict}),
+    mongoId: (value: any): boolean => $.isMongoId(stringify(value)),
+    postalCode: (value: any, locale: any): boolean => $.isPostalCode(stringify(value), locale),
+    uuid: (value: any, version?: any): boolean => $.isUUID(stringify(value), version ? version : 'all'),
+    chinese: (value: any): boolean => isChinese(stringify(value))
 } as { [prop: string]: Validator };
 
 export default validators;
 
-// oneOf: (value: any, )
-// type: (value: any, )
