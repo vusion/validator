@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "rootDir": ".",
     "target": "es5",
     "module": "es6",
     "noImplicitAny": true,
@@ -11,6 +10,7 @@
       "es2017",
       "dom"
     ],
+    "rootDir": "src",
     "outDir": "out",
     "sourceMap": true,
     "pretty": true
