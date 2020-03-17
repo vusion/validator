@@ -5,15 +5,15 @@ import parseRules from './parseRules';
 
 /**
  * @example
- * const atomValidator = new AtomValidator();
- * atomValidator.validate(value, 'required | max(200)')
+ * const vusionValidator = new VusionValidator();
+ * vusionValidator.validate(value, 'required | max(200)')
  *     .then(() => {
  *     }).catch((error: string) => {
  *     });
  *
  * @TODO: 相同环境下的 rules 应该是一样的，如何不用在每个组件中重复解析
  */
-export default class AtomValidator {
+export default class VusionValidator {
     validators: { [prop: string]: Validator };
     rules: { [prop: string]: Rule | Array<Rule> };
     validatingRules: Array<Rule>;
@@ -48,7 +48,7 @@ export default class AtomValidator {
             if (typeof rule.validate === 'string') {
                 const validator = this.validators[rule.validate];
                 if (!validator)
-                    throw new Error('[atom-validator] Unknown validator: ' + rule.validate);
+                    throw new Error('[@vusion/validator] Unknown validator: ' + rule.validate);
 
                 validate = async (value: any, rule: Rule, options?: Object) => {
                     let args: any | Array<any> | (() => any | Array<any> | Promise<any | Array<any>>) = rule.args;
@@ -151,7 +151,7 @@ export default class AtomValidator {
             }
 
             if (originalName === parsedRule.rule)
-                throw new Error('[atom-validator] Circular rule reference: ' + originalName);
+                throw new Error('[@vusion/validator] Circular rule reference: ' + originalName);
 
             let builtInRule = this.rules[parsedRule.rule];
             if (builtInRule) {
@@ -161,7 +161,7 @@ export default class AtomValidator {
 
                 if (Array.isArray(builtInRule)) {
                     if (parsedRule.args || parsedRule.trigger)
-                        console.warn('[atom-validator]', 'Cannot apply args or trigger to composite rules!');
+                        console.warn('[@vusion/validator]', 'Cannot apply args or trigger to composite rules!');
                     finalRules.push(...builtInRule);
                 } else {
                     if (builtInRule.validate)
@@ -172,7 +172,7 @@ export default class AtomValidator {
                     finalRules.push(Object.assign({}, builtInRule, parsedRule));
                 }
             } else {
-                throw new Error('[atom-validator] Unknown rule: ' + parsedRule.rule);
+                throw new Error('[@vusion/validator] Unknown rule: ' + parsedRule.rule);
                 // parsedRule.validate = parsedRule.rule;
                 // delete parsedRule.rule;
                 // finalRules.push(parsedRule);

@@ -2,8 +2,8 @@ import { localizeRules, builtInValidators } from './out';
 
 /**
  * @example
- * import VueAtomValidator from 'VueAtomValidator';
- * Vue.use(VueAtomValidator);
+ * import VueVusionValidator from 'VueVusionValidator';
+ * Vue.use(VueVusionValidator);
  */
 export default {
     install(Vue, options) {

@@ -1,6 +1,6 @@
 {
-  "name": "atom-validator",
-  "description": "Atom Validator",
+  "name": "@vusion/validator",
+  "description": "Vusion Validator",
   "version": "0.2.3",
   "author": "zhangsanshi",
   "scripts": {
@@ -11,17 +11,17 @@
     "precommit": "node node_modules/vusion-hooks/precommit"
   },
   "main": "./out/index.js",
-  "repository": "vusion/atom-validator",
+  "repository": "vusion/validator",
   "bugs": {
-    "url": "http://github.com/vusion/atom-validator/issues"
+    "url": "http://github.com/vusion/validator/issues"
   },
   "license": "MIT",
   "keywords": [
-    "atom",
+    "vusion",
     "validator"
   ],
   "tags": [
-    "atom",
+    "vusion",
     "validator"
   ],
   "dependencies": {

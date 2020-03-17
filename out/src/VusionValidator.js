@@ -1,8 +1,9 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -33,21 +34,28 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 import buildInValidators from './builtIn/validators';
 // import builtInRules from './builtIn/rules';
 import parseRules from './parseRules';
 /**
  * @example
- * const atomValidator = new AtomValidator();
- * atomValidator.validate(value, 'required | max(200)')
+ * const vusionValidator = new VusionValidator();
+ * vusionValidator.validate(value, 'required | max(200)')
  *     .then(() => {
  *     }).catch((error: string) => {
  *     });
  *
  * @TODO: 相同环境下的 rules 应该是一样的，如何不用在每个组件中重复解析
  */
-var AtomValidator = /** @class */ (function () {
-    function AtomValidator(validators, rules, validatingRules, context) {
+var VusionValidator = /** @class */ (function () {
+    function VusionValidator(validators, rules, validatingRules, context) {
         var _this = this;
         if (validatingRules === void 0) { validatingRules = []; }
         this.context = context;
@@ -61,7 +69,7 @@ var AtomValidator = /** @class */ (function () {
         });
         this.validatingRules = this.normalizeRules(validatingRules);
     }
-    AtomValidator.prototype.validate = function (value, trigger, options) {
+    VusionValidator.prototype.validate = function (value, trigger, options) {
         if (trigger === void 0) { trigger = ''; }
         return __awaiter(this, void 0, void 0, function () {
             var validatingRules, _loop_1, this_1, i, state_1;
@@ -80,7 +88,7 @@ var AtomValidator = /** @class */ (function () {
                                         if (typeof rule.validate === 'string') {
                                             validator_1 = this_1.validators[rule.validate];
                                             if (!validator_1)
-                                                throw new Error('[atom-validator] Unknown validator: ' + rule.validate);
+                                                throw new Error('[@vusion/validator] Unknown validator: ' + rule.validate);
                                             validate = function (value, rule, options) { return __awaiter(_this, void 0, void 0, function () {
                                                 var args, valid;
                                                 return __generator(this, function (_a) {
@@ -97,7 +105,7 @@ var AtomValidator = /** @class */ (function () {
                                                         case 2:
                                                             if (!Array.isArray(args))
                                                                 args = args !== undefined ? [args] : [];
-                                                            valid = validator_1.apply(void 0, [value].concat(args));
+                                                            valid = validator_1.apply(void 0, __spreadArrays([value], args));
                                                             if (!(valid instanceof Promise)) return [3 /*break*/, 4];
                                                             return [4 /*yield*/, valid];
                                                         case 3:
@@ -158,13 +166,13 @@ var AtomValidator = /** @class */ (function () {
         });
     };
     /** @TODO: i18n */
-    AtomValidator.prototype.formatMessage = function (message, options) {
+    VusionValidator.prototype.formatMessage = function (message, options) {
         if (!options)
             return message;
         else
             return message.replace(/\{([a-zA-Z0-9_]+)\}/g, function (m, $1) { return options[$1]; });
     };
-    AtomValidator.prototype.normalizeRules = function (rules, originalName) {
+    VusionValidator.prototype.normalizeRules = function (rules, originalName) {
         var _this = this;
         if (typeof rules === 'object' && !Array.isArray(rules))
             return rules;
@@ -185,7 +193,7 @@ var AtomValidator = /** @class */ (function () {
                 return rules;
         }
     };
-    AtomValidator.prototype.parseRules = function (rules, originalName) {
+    VusionValidator.prototype.parseRules = function (rules, originalName) {
         var _this = this;
         var parsedRules = parseRules(rules);
         var TRIGGER_CASES = {
@@ -211,7 +219,7 @@ var AtomValidator = /** @class */ (function () {
                     parsedRule.trigger = TRIGGER_CASES[parsedRule.trigger];
             }
             if (originalName === parsedRule.rule)
-                throw new Error('[atom-validator] Circular rule reference: ' + originalName);
+                throw new Error('[@vusion/validator] Circular rule reference: ' + originalName);
             var builtInRule = _this.rules[parsedRule.rule];
             if (builtInRule) {
                 if (typeof builtInRule === 'string'
@@ -219,7 +227,7 @@ var AtomValidator = /** @class */ (function () {
                     builtInRule = _this.normalizeRules(builtInRule, parsedRule.rule);
                 if (Array.isArray(builtInRule)) {
                     if (parsedRule.args || parsedRule.trigger)
-                        console.warn('[atom-validator]', 'Cannot apply args or trigger to composite rules!');
+                        console.warn('[@vusion/validator]', 'Cannot apply args or trigger to composite rules!');
                     finalRules.push.apply(finalRules, builtInRule);
                 }
                 else {
@@ -232,7 +240,7 @@ var AtomValidator = /** @class */ (function () {
                 }
             }
             else {
-                throw new Error('[atom-validator] Unknown rule: ' + parsedRule.rule);
+                throw new Error('[@vusion/validator] Unknown rule: ' + parsedRule.rule);
                 // parsedRule.validate = parsedRule.rule;
                 // delete parsedRule.rule;
                 // finalRules.push(parsedRule);
@@ -240,7 +248,7 @@ var AtomValidator = /** @class */ (function () {
         });
         return finalRules;
     };
-    return AtomValidator;
+    return VusionValidator;
 }());
-export default AtomValidator;
-//# sourceMappingURL=AtomValidator.js.map
+export default VusionValidator;
+//# sourceMappingURL=VusionValidator.js.map
