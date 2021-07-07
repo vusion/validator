@@ -52,34 +52,10 @@ var validators = {
     isNot: function (value, arg) { return value !== arg; },
     equals: function (value, arg) { return isEqual(value, arg); },
     notEquals: function (value, arg) { return !isEqual(value, arg); },
-    includes: function (value) {
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
-        }
-        return args.every(function (arg) { return value.includes(arg); });
-    },
-    excludes: function (value) {
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
-        }
-        return !args.some(function (arg) { return value.includes(arg); });
-    },
-    included: function (value) {
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
-        }
-        return args.includes(value);
-    },
-    excluded: function (value) {
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
-        }
-        return !args.includes(value);
-    },
+    includes: function (value, arr) { return arr.every(function (arg) { return value.includes(arg); }); },
+    excludes: function (value, arr) { return !arr.some(function (arg) { return value.includes(arg); }); },
+    included: function (value, arr) { return arr.includes(value); },
+    excluded: function (value, arr) { return !arr.includes(value); },
     noDuplicates: function (value) { return !hasDuplicates(value); },
     string: function (value) { return typeof value === 'string'; },
     number: function (value) { return typeof value === 'number'; },
