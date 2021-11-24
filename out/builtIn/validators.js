@@ -1,6 +1,6 @@
 var isPlainObject = require('lodash/isPlainObject');
 var isEqual = require('lodash/isEqual');
-import * as $ from 'validator';
+import $ from 'validator';
 /**
  * 判断是否为空值（简单类型），undefined、null 或 ''
  * @param value
@@ -99,7 +99,7 @@ var validators = {
     'without__': function (value) { return !/_{2,}/.test(value); },
     email: function (value) { return $.isEmail(stringify(value)); },
     ip: function (value, version) { return $.isIP(stringify(value), version); },
-    // ipRange: (value: any): boolean => $.isIPRange(stringify(value)),
+    ipRange: function (value, version) { return $.isIPRange(stringify(value), version); },
     port: function (value) { return $.isPort(stringify(value)); },
     url: function (value) { return $.isURL(stringify(value)); },
     macAddress: function (value) { return $.isMACAddress(stringify(value)); },
@@ -107,7 +107,7 @@ var validators = {
     ascii: function (value) { return $.isAscii(stringify(value)); },
     // base32: (value: any): boolean => $.isBase32(stringify(value)), // type丢失
     base64: function (value) { return $.isBase64(stringify(value)); },
-    byteLength: function (value, min, max) { return $.isByteLength(stringify(value), min, max); },
+    byteLength: function (value, min, max) { return $.isByteLength(stringify(value), { min: min, max: max }); },
     dataURI: function (value) { return $.isDataURI(stringify(value)); },
     // magnetURI: (value: any): boolean => $.isMagnetURI(stringify(value)), // type丢失
     divisibleBy: function (value, divisor) { return $.isDivisibleBy(stringify(value), divisor); },

@@ -1,7 +1,7 @@
 import { Validator } from '../types';
 const isPlainObject = require('lodash/isPlainObject');
 const isEqual = require('lodash/isEqual');
-import * as $ from 'validator';
+import $ from 'validator';
 
 /**
  * 判断是否为空值（简单类型），undefined、null 或 ''
@@ -105,8 +105,8 @@ const validators = {
     'without--': (value: any): boolean => !/-{2,}/.test(value),
     'without__': (value: any): boolean => !/_{2,}/.test(value),
     email: (value: any): boolean => $.isEmail(stringify(value)),
-    ip: (value: any, version: number): boolean => $.isIP(stringify(value), version),
-    // ipRange: (value: any): boolean => $.isIPRange(stringify(value)),
+    ip: (value: any, version: $.IPVersion): boolean => $.isIP(stringify(value), version),
+    ipRange: (value: any, version: $.IPVersion): boolean => $.isIPRange(stringify(value), version),
     port: (value: any) => $.isPort(stringify(value)),
     url: (value: any) => $.isURL(stringify(value)),
     macAddress: (value: any): boolean => $.isMACAddress(stringify(value)),
@@ -114,7 +114,7 @@ const validators = {
     ascii: (value: any): boolean => $.isAscii(stringify(value)),
     // base32: (value: any): boolean => $.isBase32(stringify(value)), // type丢失
     base64: (value: any): boolean => $.isBase64(stringify(value)),
-    byteLength: (value: any, min:number, max:number): boolean => $.isByteLength(stringify(value), min, max),
+    byteLength: (value: any, min:number, max:number): boolean => $.isByteLength(stringify(value), { min, max }),
     dataURI: (value: any): boolean => $.isDataURI(stringify(value)),
     // magnetURI: (value: any): boolean => $.isMagnetURI(stringify(value)), // type丢失
     divisibleBy: (value: any, divisor: number): boolean => $.isDivisibleBy(stringify(value), divisor),
@@ -128,7 +128,7 @@ const validators = {
     fqdn: (value: any): boolean => $.isFQDN(stringify(value)),
     // ipRange: (value: any): boolean => $.isIPRange(stringify(value)),
     ipOrFQDN: (value: any): boolean => $.isFQDN(stringify(value)) || $.isIP(stringify(value)),
-    isbn: (value: any, version: number): boolean => $.isISBN(stringify(value), version),
+    isbn: (value: any, version: $.ISBNVersion): boolean => $.isISBN(stringify(value), version),
     issn: (value: any): boolean => $.isISSN(stringify(value)),
     isin: (value: any): boolean => $.isISIN(stringify(value)),
     iso8601: (value: any, strict: boolean): boolean => $.isISO8601(stringify(value), {strict: strict}),
