@@ -1,7 +1,7 @@
 {
   "name": "@vusion/validator",
   "description": "Vusion Validator",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": "zhangsanshi",
   "scripts": {
     "compile": "tsc -p ./",
