@@ -1,11 +1,16 @@
 import en_US from '../locales/en-US';
 import zh_CN from '../locales/zh-CN';
+import ja from '../locales/ja';
 var messages = {
     'en-US': en_US,
     'zh-CN': zh_CN,
+    'ja': ja,
 };
 export default function localizeRules(locale) {
-    var localized = messages[locale || 'zh-CN'];
+    if (!(locale in messages)) {
+        locale = 'zh-CN';
+    }
+    var localized = messages[locale];
     return {
         required: { required: true, trigger: 'blur', message: localized['required'] },
         filled: { required: true, trigger: 'blur', message: localized['filled'] },
