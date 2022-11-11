@@ -2,14 +2,19 @@ import { Validator, Rule } from "../types";
 
 import en_US from '../locales/en-US';
 import zh_CN from '../locales/zh-CN';
+import ja from '../locales/ja';
 
 const messages: { [prop: string]: { [prop: string]: string } } = {
     'en-US': en_US,
     'zh-CN': zh_CN,
+    'ja': ja,
 }
 
 export default function localizeRules(locale: string) {
-    const localized = messages[locale || 'zh-CN'];
+    if (!(locale in messages)) {
+      locale = 'zh-CN'
+    }
+    const localized = messages[locale];
 
     return {
         required: { required: true, trigger: 'blur', message: localized['required'] } as Rule,
