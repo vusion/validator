@@ -54,6 +54,7 @@ export default {
     "^azAZ09-$": "May only contain letters, numbers or '-'",
     "^azAZ09_$": "May only contain letters, numbers or '_'",
     "^azAZ09-_$": "May only contain letters, numbers, '-' or '_'",
+    "^az09-_$": "May only contain lowercase letters, numbers, '-' or '_'",
     "without--": "Two consecutive '-' is forbidden",
     "without__": "Two consecutive '_' is forbidden",
     "email": "Must be a valid email",

@@ -67,6 +67,7 @@ export default function localizeRules(locale) {
         '^azAZ09-$': { trigger: 'input+blur', message: localized['^azAZ09-$'] },
         '^azAZ09_$': { trigger: 'input+blur', message: localized['^azAZ09_$'] },
         '^azAZ09-_$': { trigger: 'input+blur', message: localized['^azAZ09-_$'] },
+        '^az09-_$': { trigger: 'input+blur', message: localized['^az09-_$'] },
         'without--': { trigger: 'input+blur', message: localized['without--'] },
         'without__': { trigger: 'input+blur', message: localized['without__'] },
         email: { trigger: 'blur', message: localized['email'] },
