@@ -102,6 +102,7 @@ const validators = {
     '^azAZ09-$': (value: any): boolean => /^[a-zA-Z0-9-]+$/.test(value),
     '^azAZ09_$': (value: any): boolean => /^[a-zA-Z0-9_]+$/.test(value),
     '^azAZ09-_$': (value: any): boolean => /^[a-zA-Z0-9-_]+$/.test(value),
+    '^az09-_$': (value: any): boolean => /^[a-z0-9-_]+$/.test(value),
     'without--': (value: any): boolean => !/-{2,}/.test(value),
     'without__': (value: any): boolean => !/_{2,}/.test(value),
     email: (value: any): boolean => $.isEmail(stringify(value)),

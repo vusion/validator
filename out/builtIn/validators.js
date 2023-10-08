@@ -95,6 +95,7 @@ var validators = {
     '^azAZ09-$': function (value) { return /^[a-zA-Z0-9-]+$/.test(value); },
     '^azAZ09_$': function (value) { return /^[a-zA-Z0-9_]+$/.test(value); },
     '^azAZ09-_$': function (value) { return /^[a-zA-Z0-9-_]+$/.test(value); },
+    '^az09-_$': function (value) { return /^[a-z0-9-_]+$/.test(value); },
     'without--': function (value) { return !/-{2,}/.test(value); },
     'without__': function (value) { return !/_{2,}/.test(value); },
     email: function (value) { return $.isEmail(stringify(value)); },
