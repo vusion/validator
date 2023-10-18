@@ -2,6 +2,7 @@ import { Validator } from "../types";
 const isPlainObject = require("lodash/isPlainObject");
 const isEqual = require("lodash/isEqual");
 import $ from "validator";
+import { Decimal } from 'decimal.js';
 
 /**
  * 判断是否为空值（简单类型），undefined、null 或 ''
@@ -33,7 +34,8 @@ const stringify = (value: any): string => {
   else if (Array.isArray(value)) return `[${value}]`;
   else return String(value);
 };
-
+const gte = (value: any, target: any) => new Decimal(value).gte(new Decimal(target))
+const lte = (value: any, target: any) => new Decimal(value).lte(new Decimal(target))
 // 非必填验证不需要为空判断，验证时会自动通过
 const validators = {
   required: (value: any): boolean => !isNil(value),
@@ -46,10 +48,9 @@ const validators = {
     const length = value.length;
     return min <= length && length <= max;
   },
-  min: (value: any, min: any): boolean => value >= min,
-  max: (value: any, max: any): boolean => value <= max,
-  range: (value: any, min: any, max: any): boolean =>
-    min <= value && value <= max,
+  min: (value: any, min: any): boolean => gte(value, min),
+  max: (value: any, max: any): boolean => lte(value, max),
+  range: (value: any, min: any, max: any): boolean => lte(min, value) && lte(value, max),
   pattern: (value: any, re: string | RegExp): boolean =>
     new RegExp(re).test(value),
   is: (value: any, arg: any): boolean => value === arg,
