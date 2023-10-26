@@ -25,8 +25,10 @@
     "validator"
   ],
   "dependencies": {
+    "@types/decimal.js": "^7.4.0",
     "@types/lodash": "^4.14.136",
     "@types/validator": "^13.7.0",
+    "decimal.js": "^10.4.2",
     "lodash": "^4.17.11",
     "validator": "^13.0.0"
   },
