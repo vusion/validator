@@ -3,6 +3,7 @@ const isPlainObject = require("lodash/isPlainObject");
 const isEqual = require("lodash/isEqual");
 import $ from "validator";
 import { Decimal } from 'decimal.js';
+const isNumberStr = (str: string) => /^[-+]?\d+(\.\d+)?$/.test(String(str));
 
 /**
  * 判断是否为空值（简单类型），undefined、null 或 ''
@@ -65,7 +66,7 @@ const validators = {
   excluded: (value: any, arr: any[]): boolean => !arr.includes(value),
   noDuplicates: (value: Array<any>): boolean => !hasDuplicates(value),
   string: (value: any): boolean => typeof value === "string",
-  number: (value: any): boolean => typeof value === "number",
+  number: (value: any): boolean => typeof value === "number" || isNumberStr(value),
   numeric: (value: any, noSymbols?: boolean): boolean =>
     $.isNumeric(stringify(value), {
       no_symbols: noSymbols,
