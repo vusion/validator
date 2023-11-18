@@ -35,8 +35,8 @@ const stringify = (value: any): string => {
   else if (Array.isArray(value)) return `[${value}]`;
   else return String(value);
 };
-const gte = (value: any, target: any) => new Decimal(value).gte(new Decimal(target))
-const lte = (value: any, target: any) => new Decimal(value).lte(new Decimal(target))
+const gte = (value: any, target: any) => new Decimal(String(value)).gte(new Decimal(String(target)))
+const lte = (value: any, target: any) => new Decimal(String(value)).lte(new Decimal(String(target)))
 // 非必填验证不需要为空判断，验证时会自动通过
 const validators = {
   required: (value: any): boolean => !isNil(value),
@@ -54,10 +54,42 @@ const validators = {
   range: (value: any, min: any, max: any): boolean => lte(min, value) && lte(value, max),
   pattern: (value: any, re: string | RegExp): boolean =>
     new RegExp(re).test(value),
-  is: (value: any, arg: any): boolean => value === arg,
-  isNot: (value: any, arg: any): boolean => value !== arg,
-  equals: (value: any, arg: any): boolean => isEqual(value, arg),
-  notEquals: (value: any, arg: any): boolean => !isEqual(value, arg),
+  is: (value: any, arg: any): boolean => {
+    if (isNumberStr(value)) {
+      value = Number(value)
+    }
+    if (isNumberStr(arg)) {
+      arg = Number(arg)
+    }
+    return value === arg
+  },
+  isNot: (value: any, arg: any): boolean => {
+    if (isNumberStr(value)) {
+      value = Number(value)
+    }
+    if (isNumberStr(arg)) {
+      arg = Number(arg)
+    }
+    return value !== arg
+  },
+  equals: (value: any, arg: any): boolean => {
+    if (isNumberStr(value)) {
+      value = Number(value)
+    }
+    if (isNumberStr(arg)) {
+      arg = Number(arg)
+    }
+    return isEqual(value, arg)
+  },
+  notEquals: (value: any, arg: any): boolean => {
+    if (isNumberStr(value)) {
+      value = Number(value)
+    }
+    if (isNumberStr(arg)) {
+      arg = Number(arg)
+    }
+    return !isEqual(value, arg)
+  },
   includes: (value: any, arr: any[]): boolean =>
     arr.every((arg) => value.includes(arg)),
   excludes: (value: any, arr: any[]): boolean =>
