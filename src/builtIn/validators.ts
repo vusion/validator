@@ -29,9 +29,34 @@ const isChinese = (value: any) => {
 };
 
 const stringify = (value: any): string => {
-  if (isNil(value)) return "";
+  if (isEmpty(value)) return "";
   else if (Array.isArray(value)) return `[${value}]`;
   else return String(value);
+};
+
+const getLength = (value: any) => {
+  if (isNil(value)) return 0;
+  else if (value instanceof Object) return Object.keys(value).length;
+  else if (Array.isArray(value)) return value.length;
+  else return String(value).length;
+}
+
+// for lcap validate "pattern" rule
+const patternStr = (value: any, re: string, strict: boolean = true, matchCase: boolean = true): boolean => {
+  if (value === null || value === undefined) {
+    return false;
+  }
+  let regExp: RegExp;
+  if (strict) {
+    regExp = new RegExp(`^${re}$`);
+  } else {
+    regExp = new RegExp(re);
+  }
+  let flags = regExp.flags.replace(/i/g, '')
+  if (!matchCase) {
+    flags += 'i';
+  }
+  return new RegExp(regExp.source, flags).test(value);
 };
 
 // 非必填验证不需要为空判断，验证时会自动通过
@@ -40,10 +65,10 @@ const validators = {
   filled: (value: any): boolean => !!stringify(value).trim(),
   notEmpty: (value: any): boolean => !isEmpty(value),
   empty: (value: any): boolean => isEmpty(value),
-  minLength: (value: any, min: number): boolean => value.length >= min,
-  maxLength: (value: any, max: number): boolean => value.length <= max,
+  minLength: (value: any, min: number): boolean => getLength(value) >= min,
+  maxLength: (value: any, max: number): boolean => getLength(value) <= max,
   rangeLength: (value: any, min: number, max: number): boolean => {
-    const length = value.length;
+    const length = getLength(value);
     return min <= length && length <= max;
   },
   min: (value: any, min: any): boolean => value >= min,
@@ -52,6 +77,7 @@ const validators = {
     min <= value && value <= max,
   pattern: (value: any, re: string | RegExp): boolean =>
     new RegExp(re).test(value),
+  patternStr,
   is: (value: any, arg: any): boolean => value === arg,
   isNot: (value: any, arg: any): boolean => value !== arg,
   equals: (value: any, arg: any): boolean => isEqual(value, arg),
@@ -149,7 +175,7 @@ const validators = {
   jwt: (value: any): boolean => $.isJWT(stringify(value)),
   latLong: (value: any): boolean => $.isLatLong(stringify(value)),
   mobile: (value: any, locale?: any, strict?: boolean): boolean =>
-    $.isMobilePhone(stringify(value), locale, { strictMode: strict }),
+    $.isMobilePhone(stringify(value), locale || 'any', { strictMode: Boolean(strict) }),
   mongoId: (value: any): boolean => $.isMongoId(stringify(value)),
   postalCode: (value: any, locale: any): boolean =>
     $.isPostalCode(stringify(value), locale),
@@ -159,3 +185,16 @@ const validators = {
 } as { [prop: string]: Validator };
 
 export default validators;
+
+// console.log(validators.minLength(undefined, 2)) // false
+// console.log(validators.minLength(null, 2)) // false
+// console.log(validators.minLength(true, 2)) // true
+// console.log(validators.minLength(false, 2)) // true
+// console.log(validators.minLength(0, 2)) // true
+// console.log(validators.minLength(1, 2)) // true
+// console.log(validators.minLength("", 2)) // false
+// console.log(validators.minLength("aa", 2)) // true
+// console.log(validators.minLength([], 2)) // false
+// console.log(validators.minLength([1,2,3], 2)) // true
+// console.log(validators.minLength({}, 2)) // false
+// console.log(validators.minLength({name: 'tom'}, 2)) // true
