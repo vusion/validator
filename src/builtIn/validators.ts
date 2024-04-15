@@ -234,20 +234,6 @@ export const validators = {
 
 export default validators;
 
-// console.log(validators.minLength(undefined, 2)) // false
-// console.log(validators.minLength(null, 2)) // false
-// console.log(validators.minLength(true, 2)) // true
-// console.log(validators.minLength(false, 2)) // true
-// console.log(validators.minLength(0, 2)) // true
-// console.log(validators.minLength(1, 2)) // true
-// console.log(validators.minLength("", 2)) // false
-// console.log(validators.minLength("aa", 2)) // true
-// console.log(validators.minLength([], 2)) // false
-// console.log(validators.minLength([1,2,3], 2)) // true
-// console.log(validators.minLength({}, 2)) // false
-// console.log(validators.minLength({name: 'tom'}, 2)) // true
-
-
 type CreditCardIssuer = 'amex' | 'dinersclub' | 'discover' | 'jcb' | 'mastercard' | 'unionpay' | 'visa' | '';
 
 function isCreditCard(value: string, issuer?: Array<CreditCardIssuer>): boolean {
