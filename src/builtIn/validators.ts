@@ -8,17 +8,24 @@ import $ from "validator";
  * @param value
  */
 const isNil = (value: any): boolean =>
-  value === undefined || value === null || value === "";
+  value === undefined || value === null;
 
 /**
  * 判断是否为空值（简单类型+复杂类型），除了 undefined、null 或 ''，还包括空 [] 或 {}
  * @param value
  */
 const isEmpty = (value: any): boolean => {
-  if (isNil(value)) return true;
-  else if (Array.isArray(value)) return !value.length;
-  else if (value instanceof Object) return !Object.keys(value).length;
-  else return false;
+  if (isNil(value) || value === '') {
+    return true;
+  } else if (Array.isArray(value)) {
+    return !value.length;
+  } else if (value instanceof Map) {
+    return !value.size;
+  } else if (value instanceof Object) {
+    return !Object.keys(value).length;
+  } else {
+    return String(value).length === 0;
+  }
 };
 
 const hasDuplicates = (value: Array<any>): boolean =>
@@ -29,39 +36,79 @@ const isChinese = (value: any) => {
 };
 
 const stringify = (value: any): string => {
-  if (isEmpty(value)) return "";
-  else if (Array.isArray(value)) return `[${value}]`;
-  else return String(value);
+  if (isEmpty(value)) {
+    return "";
+  } else if (Array.isArray(value)) {
+    return `[${value}]`;
+  } else if (value instanceof Map) {
+    return stringifyObject(value);
+  } else if (value instanceof Object) {
+    return stringifyMap(value);
+  } else {
+    return String(value);
+  }
 };
 
 const getLength = (value: any) => {
-  if (isNil(value)) return 0;
-  else if (value instanceof Object) return Object.keys(value).length;
-  else if (Array.isArray(value)) return value.length;
-  else return String(value).length;
+  if (isNil(value)) {
+    return 0;
+  } else if (Array.isArray(value)) {
+    return value.length;
+  } else if (value instanceof Map) {
+    return value.size;
+  } else if (value instanceof Object) {
+    return Object.keys(value).length;
+  } else {
+    // includes the case where value is a string
+    return String(value).length;
+  }
 }
 
 // for lcap validate "pattern" rule
-const patternStr = (value: any, re: string, strict: boolean = true, matchCase: boolean = true): boolean => {
+const pattern = (value: any, re: string, allMatch: boolean = true, caseSensitive: boolean = true): boolean => {
   if (value === null || value === undefined) {
     return false;
   }
   let regExp: RegExp;
-  if (strict) {
+  if (allMatch) {
     regExp = new RegExp(`^${re}$`);
   } else {
     regExp = new RegExp(re);
   }
   let flags = regExp.flags.replace(/i/g, '')
-  if (!matchCase) {
+  if (!caseSensitive) {
     flags += 'i';
   }
   return new RegExp(regExp.source, flags).test(value);
 };
 
+function minImpl<T extends string | number | Date>(value: T, min: T): boolean {
+  if (typeof value === 'string' && typeof min === 'string') {
+    return value >= min;
+  } else if (typeof value === "number" && typeof min === "number") {
+    return value >= min;
+  } else  if (value instanceof Date && min instanceof Date) {
+    return value >= min;
+  }
+}
+
+function maxImpl<T extends string | number | Date>(value: T, max: T): boolean {
+  if (typeof value === 'string' && typeof max === 'string') {
+    return value <= max;
+  } else if (typeof value === "number" && typeof max === "number") {
+    return value <= max;
+  } else  if (value instanceof Date && max instanceof Date) {
+    return value <= max;
+  }
+}
+
+function rangeImplement<T extends string | number | Date>(value: T, min: T, max: T): boolean {
+  return minImpl(value, min) && maxImpl(value, max);
+}
+
 // 非必填验证不需要为空判断，验证时会自动通过
-const validators = {
-  required: (value: any): boolean => !isNil(value),
+export const validators = {
+  required: (value: any): boolean => !(isNil(value) || value === ''),
   filled: (value: any): boolean => !!stringify(value).trim(),
   notEmpty: (value: any): boolean => !isEmpty(value),
   empty: (value: any): boolean => isEmpty(value),
@@ -71,23 +118,22 @@ const validators = {
     const length = getLength(value);
     return min <= length && length <= max;
   },
-  min: (value: any, min: any): boolean => value >= min,
-  max: (value: any, max: any): boolean => value <= max,
-  range: (value: any, min: any, max: any): boolean =>
-    min <= value && value <= max,
-  pattern: (value: any, re: string | RegExp): boolean =>
-    new RegExp(re).test(value),
-  patternStr,
+  // 仅支持数字、字符串、日期时间
+  min: minImpl,
+  // 仅支持数字、字符串、日期时间
+  max: maxImpl,
+  range: rangeImplement,
+  pattern: pattern,
   is: (value: any, arg: any): boolean => value === arg,
   isNot: (value: any, arg: any): boolean => value !== arg,
   equals: (value: any, arg: any): boolean => isEqual(value, arg),
   notEquals: (value: any, arg: any): boolean => !isEqual(value, arg),
-  includes: (value: any, arr: any[]): boolean =>
+  includes: (value: any[], arr: any[]): boolean =>
     arr.every((arg) => value.includes(arg)),
-  excludes: (value: any, arr: any[]): boolean =>
+  excludes: (value: any[], arr: any[]): boolean =>
     !arr.some((arg) => value.includes(arg)),
-  included: (value: any, arr: any[]): boolean => arr.includes(value),
-  excluded: (value: any, arr: any[]): boolean => !arr.includes(value),
+  included: (value: any[], arr: any[]): boolean => arr.includes(value),
+  excluded: (value: any[], arr: any[]): boolean => !arr.includes(value),
   noDuplicates: (value: Array<any>): boolean => !hasDuplicates(value),
   string: (value: any): boolean => typeof value === "string",
   number: (value: any): boolean => typeof value === "number",
@@ -103,7 +149,9 @@ const validators = {
     }),
   boolean: (value: any): boolean => typeof value === "boolean",
   function: (value: any): boolean => typeof value === "function",
+  // removed since v380
   object: (value: any): boolean => typeof value === "object",
+  // displayed as object since v380
   plainObject: (value: any): boolean => isPlainObject(value),
   array: (value: any): boolean => Array.isArray(value),
   alpha: (value: any): boolean => $.isAlpha(stringify(value)),
@@ -157,7 +205,7 @@ const validators = {
   hexColor: (value: any): boolean => $.isHexColor(stringify(value)),
   hex: (value: any): boolean => $.isHexadecimal(stringify(value)),
   // identityCard: (value: any, locale: any) => $.isIdentityCard(stringify(value), locale ? locale : 'any'),
-  creditCard: (value: any): boolean => $.isCreditCard(stringify(value)),
+  creditCard: (value: any, issuer: Array<CreditCardIssuer>): boolean => isCreditCard(stringify(value), issuer),
   fqdn: (value: any): boolean => $.isFQDN(stringify(value)),
   // ipRange: (value: any): boolean => $.isIPRange(stringify(value)),
   ipOrFQDN: (value: any): boolean =>
@@ -198,3 +246,43 @@ export default validators;
 // console.log(validators.minLength([1,2,3], 2)) // true
 // console.log(validators.minLength({}, 2)) // false
 // console.log(validators.minLength({name: 'tom'}, 2)) // true
+
+
+type CreditCardIssuer = 'amex' | 'dinersclub' | 'discover' | 'jcb' | 'mastercard' | 'unionpay' | 'visa' | '';
+
+function isCreditCard(value: string, issuer?: Array<CreditCardIssuer>): boolean {
+  if (issuer) {
+    return issuer.some(card => $.isCreditCard(value, { provider: card }))
+  } else {
+    return $.isCreditCard(value);
+  }
+}
+
+function stringifyObject(obj: any, indent: number = 0): string {
+  let result = '';
+  for (const key in obj) {
+    if (typeof obj[key] === 'object') {
+      result += " ".repeat(indent) + key + ": \n";
+      result += stringifyObject(obj[key], indent + 2);
+    } else {
+      result += " ".repeat(indent) + key + ": " + stringify(obj[key]) + "\n";
+    }
+  }
+  return result;
+}
+
+function stringifyMap(map: Map<any, any>, indent: number = 0): string {
+  let result = '';
+  for (const [key, value] of map) {
+    if (value instanceof Map) {
+      result += " ".repeat(indent) + key + ": \n";
+      result += stringifyMap(value, indent + 2);
+    } else if (typeof value === 'object') {
+      result += " ".repeat(indent) + key + ": \n";
+      result += stringifyObject(value, indent + 2);
+    } else {
+      result += " ".repeat(indent) + key + ": " + stringify(value) + "\n";
+    }
+  }
+  return result;
+}

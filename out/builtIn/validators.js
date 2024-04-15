@@ -11,14 +11,18 @@ var isNil = function (value) { return value === undefined || value === null || v
  * @param value
  */
 var isEmpty = function (value) {
-    if (isNil(value))
+    if (isNil(value) || value === '') {
         return true;
-    else if (Array.isArray(value))
+    }
+    else if (Array.isArray(value)) {
         return !value.length;
-    else if (value instanceof Object)
+    }
+    else if (value instanceof Object) {
         return !Object.keys(value).length;
-    else
+    }
+    else {
         return false;
+    }
 };
 var hasDuplicates = function (value) { return value.length !== new Set(value).size; };
 var isChinese = function (value) {
