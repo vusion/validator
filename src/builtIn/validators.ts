@@ -3,120 +3,20 @@ const isPlainObject = require("lodash/isPlainObject");
 const isEqual = require("lodash/isEqual");
 import $ from "validator";
 
-/**
- * 判断是否为空值（简单类型），undefined、null 或 ''
- * @param value
- */
-const isNil = (value: any): boolean =>
-  value === undefined || value === null;
-
-/**
- * 判断是否为空值（简单类型+复杂类型），除了 undefined、null 或 ''，还包括空 [] 或 {}
- * @param value
- */
-const isEmpty = (value: any): boolean => {
-  if (isNil(value) || value === '') {
-    return true;
-  } else if (Array.isArray(value)) {
-    return !value.length;
-  } else if (value instanceof Map) {
-    return !value.size;
-  } else if (value instanceof Object) {
-    return !Object.keys(value).length;
-  } else {
-    return String(value).length === 0;
-  }
-};
-
-const hasDuplicates = (value: Array<any>): boolean =>
-  value.length !== new Set(value).size;
-
-const isChinese = (value: any) => {
-  return /^[\u4e00-\u9fa5]+$/gi.test(value);
-};
-
-const stringify = (value: any): string => {
-  if (isEmpty(value)) {
-    return "";
-  } else if (Array.isArray(value)) {
-    return `[${value}]`;
-  } else if (value instanceof Map) {
-    return stringifyObject(value);
-  } else if (value instanceof Object) {
-    return stringifyMap(value);
-  } else {
-    return String(value);
-  }
-};
-
-const getLength = (value: any) => {
-  if (isNil(value)) {
-    return 0;
-  } else if (Array.isArray(value)) {
-    return value.length;
-  } else if (value instanceof Map) {
-    return value.size;
-  } else if (value instanceof Object) {
-    return Object.keys(value).length;
-  } else {
-    // includes the case where value is a string
-    return String(value).length;
-  }
-}
-
-// for lcap validate "pattern" rule
-const pattern = (value: any, re: string, allMatch: boolean = true, caseSensitive: boolean = true): boolean => {
-  if (value === null || value === undefined) {
-    return false;
-  }
-  let regExp: RegExp;
-  if (allMatch) {
-    regExp = new RegExp(`^${re}$`);
-  } else {
-    regExp = new RegExp(re);
-  }
-  let flags = regExp.flags.replace(/i/g, '')
-  if (!caseSensitive) {
-    flags += 'i';
-  }
-  return new RegExp(regExp.source, flags).test(value);
-};
-
-function minImpl<T extends string | number | Date>(value: T, min: T): boolean {
-  if (typeof value === 'string' && typeof min === 'string') {
-    return value >= min;
-  } else if (typeof value === "number" && typeof min === "number") {
-    return value >= min;
-  } else  if (value instanceof Date && min instanceof Date) {
-    return value >= min;
-  }
-}
-
-function maxImpl<T extends string | number | Date>(value: T, max: T): boolean {
-  if (typeof value === 'string' && typeof max === 'string') {
-    return value <= max;
-  } else if (typeof value === "number" && typeof max === "number") {
-    return value <= max;
-  } else  if (value instanceof Date && max instanceof Date) {
-    return value <= max;
-  }
-}
-
-function rangeImplement<T extends string | number | Date>(value: T, min: T, max: T): boolean {
-  return minImpl(value, min) && maxImpl(value, max);
-}
-
 // 非必填验证不需要为空判断，验证时会自动通过
 export const validators = {
   required: (value: any): boolean => !(isNil(value) || value === ''),
   filled: (value: any): boolean => !!stringify(value).trim(),
   notEmpty: (value: any): boolean => !isEmpty(value),
   empty: (value: any): boolean => isEmpty(value),
-  minLength: (value: any, min: number): boolean => getLength(value) >= min,
-  maxLength: (value: any, max: number): boolean => getLength(value) <= max,
+  minLength: (value: any, min: number): boolean => isNil(min) ? false : getLength(value) >= min,
+  maxLength: (value: any, max: number): boolean => isNil(max) ? false : getLength(value) <= max,
   rangeLength: (value: any, min: number, max: number): boolean => {
+    if (isNil(min) || isNil(max)) {
+      return false;
+    }
     const length = getLength(value);
-    return min <= length && length <= max;
+    return (min <= length && length <= max);
   },
   // 仅支持数字、字符串、日期时间
   min: minImpl,
@@ -232,7 +132,34 @@ export const validators = {
   chinese: (value: any): boolean => isChinese(stringify(value)),
 } as { [prop: string]: Validator };
 
-export default validators;
+
+function minImpl<T extends string | number | Date>(value: T, min: T): boolean {
+  if (typeof value === 'string' && typeof min === 'string') {
+    return value >= min;
+  } else if (typeof value === "number" && typeof min === "number") {
+    return value >= min;
+  } else if (value instanceof Date && min instanceof Date) {
+    return value >= min;
+  } else {
+    return false;
+  }
+}
+
+function maxImpl<T extends string | number | Date>(value: T, max: T): boolean {
+  if (typeof value === 'string' && typeof max === 'string') {
+    return value <= max;
+  } else if (typeof value === "number" && typeof max === "number") {
+    return value <= max;
+  } else if (value instanceof Date && max instanceof Date) {
+    return value <= max;
+  } else {
+    return false;
+  }
+}
+
+function rangeImplement<T extends string | number | Date>(value: T, min: T, max: T): boolean {
+  return (minImpl(value, min) && maxImpl(value, max));
+}
 
 type CreditCardIssuer = 'amex' | 'dinersclub' | 'discover' | 'jcb' | 'mastercard' | 'unionpay' | 'visa' | '';
 
@@ -272,3 +199,86 @@ function stringifyMap(map: Map<any, any>, indent: number = 0): string {
   }
   return result;
 }
+
+/**
+ * 判断是否为空值（简单类型），undefined、null 或 ''
+ * @param value
+ */
+function isNil(value: any) {
+  return value === undefined || value === null;
+}
+
+/**
+ * 判断是否为空值（简单类型+复杂类型），除了 undefined、null 或 ''，还包括空 [] 或 {}
+ * @param value
+ */
+function isEmpty(value: any): boolean {
+  if (isNil(value) || value === '') {
+    return true;
+  } else if (Array.isArray(value)) {
+    return !value.length;
+  } else if (value instanceof Map) {
+    return !value.size;
+  } else if (value instanceof Object) {
+    return !Object.keys(value).length;
+  } else {
+    return String(value).length === 0;
+  }
+};
+
+function hasDuplicates(value: Array<any>): boolean {
+  return value.length !== new Set(value).size;
+}
+
+function isChinese(value: any) {
+  return /^[\u4e00-\u9fa5]+$/gi.test(value);
+};
+
+function stringify(value: any): string {
+  if (isEmpty(value)) {
+    return "";
+  } else if (Array.isArray(value)) {
+    return `[${value}]`;
+  } else if (value instanceof Map) {
+    return stringifyObject(value);
+  } else if (value instanceof Object) {
+    return stringifyMap(value);
+  } else {
+    return String(value);
+  }
+};
+
+function getLength(value: any) {
+  if (isNil(value)) {
+    return 0;
+  } else if (Array.isArray(value)) {
+    return value.length;
+  } else if (value instanceof Map) {
+    return value.size;
+  } else if (value instanceof Object) {
+    return Object.keys(value).length;
+  } else {
+    // includes the case where value is a string
+    return String(value).length;
+  }
+}
+
+// for lcap validate "pattern" rule
+function pattern(value: any, re: string, allMatch: boolean = true, caseSensitive: boolean = true): boolean {
+  if (value === null || value === undefined) {
+    return false;
+  }
+  let regExp: RegExp;
+  if (allMatch) {
+    regExp = new RegExp(`^${re}$`);
+  } else {
+    regExp = new RegExp(re);
+  }
+  let flags = regExp.flags.replace(/i/g, '')
+  if (!caseSensitive) {
+    flags += 'i';
+  }
+  return new RegExp(regExp.source, flags).test(value);
+};
+
+export default validators;
