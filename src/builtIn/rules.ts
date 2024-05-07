@@ -28,6 +28,7 @@ export default function localizeRules(locale: string) {
         max: { trigger: 'blur', message: localized['max'] } as Rule,
         range: { trigger: 'blur', message: localized['range'] } as Rule,
         pattern: { trigger: 'input+blur', message: localized['pattern'] } as Rule,
+        patternStr: { trigger: 'input+blur', message: localized['pattern'] } as Rule,
         is: { trigger: 'blur', message: localized['is'] } as Rule,
         isNot: { trigger: 'blur', message: localized['isNot'] } as Rule,
         equals: { trigger: 'blur', message: localized['equals'] } as Rule,
