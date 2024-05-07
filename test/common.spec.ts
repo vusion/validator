@@ -157,6 +157,17 @@ chk(v.creditCard('438588358369716208', ['mastercard']), false);
 chk(v.creditCard('6225983201655787', ['mastercard']), false);
 chk(v.creditCard('4325983201655787', ['unionpay']), false);
 chk(v.creditCard('4975129291544179', ['visa']), true);
+chk(v.creditCard('4233009451751814', ['unionpay']), false);
+// chk(v.creditCard('62230847926699816', ['unionpay']), true);
+
+chk(v.pattern(123, '123', true, true), true);
+chk(v.pattern('\'abcccc', '\'abc', false, true), true);
+
+chk(v.pattern(123, '\\d+', true, true), true);
+chk(v.pattern(123, '\\d+', false, true), true);
+chk(v.pattern(123, '\\d', false, true), true);
+chk(v.pattern(123, '\\d', true, true), false);
+// chk(v.pattern('123', '\d', false, false), true);
 
 chk(v.is(null, undefined), false);
 chk(v.is(null, null), true);

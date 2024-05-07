@@ -1,3 +1,4 @@
+import { toLower } from "lodash";
 import { Validator } from "../types";
 const isPlainObject = require("lodash/isPlainObject");
 const isEqual = require("lodash/isEqual");
@@ -164,6 +165,17 @@ function rangeImplement<T extends string | number | Date>(value: T, min: T, max:
 type CreditCardIssuer = 'amex' | 'dinersclub' | 'discover' | 'jcb' | 'mastercard' | 'unionpay' | 'visa' | '';
 
 function isCreditCard(value: string, issuer?: Array<CreditCardIssuer>): boolean {
+  // if (issuer?.length > 0 && issuer.map(toLower).includes('unionpay')) {
+  //   return [/622\d{13,16}/,
+  //   /603601\d{10}/,
+  //   /603265\d{10}/,
+  //   /621977\d{10}/,
+  //   /603708\d{10}/,
+  //   /602969\d{10}/,
+  //   /601428\d{10}/,
+  //   /603367\d{10}/,
+  //   /603694\d{10}/].some(reg => value.match(reg)) || issuer.some(card => $.isCreditCard(value, { provider: card }))
+  // } else
   if (issuer) {
     return issuer.some(card => $.isCreditCard(value, { provider: card }))
   } else {
